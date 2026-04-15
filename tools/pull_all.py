@@ -470,9 +470,13 @@ def build_executive_summary(current: dict, previous: dict) -> dict:
     wr_prev = _safe_num(prev.get("jobtread", {}), "win_rate")
     wr_trend, wr_dir = compute_trend(wr_cur, wr_prev, is_rate=True)
 
-    # 6. Appointments (GHL)
-    appt_cur = _safe_num(current.get("ghl", {}), "appointments_booked")
-    appt_prev = _safe_num(prev.get("ghl", {}), "appointments_booked")
+    # 6. Appointments — GHL calendar, or fall back to JobTread "Appointment Set" stage
+    appt_cur = _safe_num(current.get("ghl", {}), "appointments_booked") or None
+    if not appt_cur:
+        appt_cur = _safe_num(current.get("jobtread", {}), "appointments_booked")
+    appt_prev = _safe_num(prev.get("ghl", {}), "appointments_booked") or None
+    if not appt_prev:
+        appt_prev = _safe_num(prev.get("jobtread", {}), "appointments_booked")
     appt_trend, appt_dir = compute_trend(appt_cur, appt_prev)
     show_rate = None
     if current.get("ghl") and "error" not in current["ghl"]:

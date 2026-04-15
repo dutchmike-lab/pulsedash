@@ -302,6 +302,12 @@ def pull(grant_key: str, org_id: str = None, start_date: str = None, end_date: s
             "Dead do not call", "Dead", "Lost", "Disqualified"
         ])
 
+        # Appointments booked = leads in "Appointment Set" stage
+        appointments_booked = sum(
+            count for stage, count in lead_data.items()
+            if "appointment" in stage.lower()
+        )
+
         # Pipeline value placeholder — Pave API doesn't expose per-job financials
         # Will show $0 until a supported API field is identified
         pipeline_value = 0
@@ -333,6 +339,7 @@ def pull(grant_key: str, org_id: str = None, start_date: str = None, end_date: s
                 "accounts_receivable": {"value": fmt_dollars(ar_value), "spark": []},
                 "revenue_closed": {"value": fmt_dollars(revenue_closed), "spark": []},
                 "pipeline_value": {"value": fmt_dollars(pipeline_value), "spark": []},
+                "appointments_booked": {"value": fmt_number(appointments_booked), "spark": []},
             },
             "sales_pipeline": sales_pipeline,
             "production_pipeline": production_pipeline,

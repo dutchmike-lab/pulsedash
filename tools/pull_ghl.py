@@ -373,7 +373,14 @@ def pull(api_key: str, location_id: str, start_date: str, end_date: str) -> dict
         )
 
         # ---- 4b. Appointments / consultations -----------------------------
-        appts = _fetch_appointments(headers, location_id, start_date, end_date)
+        # Extend the appointment window 30 days into the future so upcoming
+        # appointments (e.g. booked today for next week) are always visible.
+        from datetime import date, timedelta as td
+        appt_end = max(
+            datetime.strptime(end_date, "%Y-%m-%d").date(),
+            date.today() + td(days=30),
+        ).strftime("%Y-%m-%d")
+        appts = _fetch_appointments(headers, location_id, start_date, appt_end)
         total_appts = len(appts)
         showed_count = 0
         noshow_count = 0
