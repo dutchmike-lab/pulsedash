@@ -708,22 +708,7 @@ canvas.spark { display: block; }
 
   <div class="nav-section">
     <div class="nav-label">Brands</div>
-    <button class="nav-brand-item active" data-brand="rc" onclick="selectBrand('rc',this)">
-      <span class="nav-brand-dot" style="background:var(--rc-color)"></span>
-      <span>Remodeling Concepts</span>
-    </button>
-    <button class="nav-brand-item" data-brand="rnr" onclick="selectBrand('rnr',this)">
-      <span class="nav-brand-dot" style="background:var(--rnr-color)"></span>
-      <span>Ryann Reed</span>
-    </button>
-    <button class="nav-brand-item" data-brand="wl" onclick="selectBrand('wl',this)">
-      <span class="nav-brand-dot" style="background:var(--wl-color)"></span>
-      <span>Wood Lane Golf</span>
-    </button>
-    <button class="nav-brand-item" data-brand="both" onclick="selectBrand('both',this)">
-      <span class="nav-brand-dot" style="background:linear-gradient(135deg,var(--rc-color),var(--rnr-color))"></span>
-      <span>All Brands</span>
-    </button>
+    <div id="brand-nav-items"><!-- populated by buildBrandNav() after data loads --></div>
   </div>
 
   <div class="sidebar-footer">
@@ -832,6 +817,28 @@ const BRAND_COLORS = {
 let DATA = null;
 let currentBrand = 'rc';
 let currentTab   = 'executive';
+
+function buildBrandNav(json) {
+  const available = Object.keys(json).filter(k => json[k] && typeof json[k] === 'object' && !json[k]._error && ['rc','rnr','wl'].includes(k));
+  const container = document.getElementById('brand-nav-items');
+  if (!container) return;
+  let html = '';
+  available.forEach((b, i) => {
+    const active = i === 0 && !DATA ? ' active' : (b === currentBrand ? ' active' : '');
+    html += `<button class="nav-brand-item${active}" data-brand="${b}" onclick="selectBrand('${b}',this)">
+      <span class="nav-brand-dot" style="background:${BRAND_COLORS[b]||'#888'}"></span>
+      <span>${BRAND_NAMES[b]||b}</span>
+    </button>`;
+  });
+  // Only show "All Brands" if more than one brand is available
+  if (available.length > 1) {
+    html += `<button class="nav-brand-item" data-brand="both" onclick="selectBrand('both',this)">
+      <span class="nav-brand-dot" style="background:linear-gradient(135deg,${BRAND_COLORS[available[0]]||'#e07252'},${BRAND_COLORS[available[1]]||'#8b5cf6'})"></span>
+      <span>All Brands</span>
+    </button>`;
+  }
+  container.innerHTML = html;
+}
 let sparkCharts  = {};
 let sparkCounter = 0;
 
@@ -1135,7 +1142,7 @@ function renderExecutive(brand) {
   const container = document.getElementById('tab-executive');
   if (brand === 'both') {
     let html = '';
-    ['rc','rnr','wl'].forEach(b => {
+    Object.keys(DATA).filter(k=>['rc','rnr','wl'].includes(k)).forEach(b => {
       const d = DATA[b];
       if (!d || d._error) return;
       html += `<div style="margin-bottom:8px">
@@ -1287,7 +1294,7 @@ function buildExecutiveGrid(d, brand) {
 function renderOverview(brand) {
   const container = document.getElementById('tab-overview');
   if (brand === 'both') {
-    container.innerHTML = ['rc','rnr','wl'].map(b => {
+    container.innerHTML = Object.keys(DATA).filter(k=>['rc','rnr','wl'].includes(k)).map(b => {
       const d = DATA[b];
       if (!d) return '';
       return `<div style="margin-bottom:32px">
@@ -1461,7 +1468,7 @@ function buildOverviewGrid(d, brand) {
 function renderMarketing(brand) {
   const container = document.getElementById('tab-marketing');
   if (brand === 'both') {
-    container.innerHTML = ['rc','rnr','wl'].map(b => {
+    container.innerHTML = Object.keys(DATA).filter(k=>['rc','rnr','wl'].includes(k)).map(b => {
       const d = DATA[b]; if (!d) return '';
       return `<div style="margin-bottom:32px">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
@@ -2021,7 +2028,7 @@ function buildCampaignsGrid(d, brand) {
 function renderSales(brand) {
   const container = document.getElementById('tab-sales');
   if (brand === 'both') {
-    container.innerHTML = ['rc','rnr','wl'].map(b => {
+    container.innerHTML = Object.keys(DATA).filter(k=>['rc','rnr','wl'].includes(k)).map(b => {
       const d = DATA[b]; if (!d) return '';
       return `<div style="margin-bottom:32px">
         <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
@@ -2640,12 +2647,13 @@ async function loadData(isRefresh) {
       document.getElementById('live-badge').style.display = 'inline-flex';
     }
 
+    // Build sidebar brand buttons from whatever brands are in the data
+    buildBrandNav(json);
+
     // Only auto-select brand on initial load, not on refresh
     if (!isRefresh) {
-      const hasRC  = json.rc  && !json.rc._error;
-      const hasRNR = json.rnr && !json.rnr._error;
-      const hasWL  = json.wl  && !json.wl._error;
-      currentBrand = hasRC ? 'rc' : hasRNR ? 'rnr' : hasWL ? 'wl' : 'rc';
+      const available = Object.keys(json).filter(k => json[k] && typeof json[k] === 'object' && !json[k]._error && ['rc','rnr','wl'].includes(k));
+      currentBrand = available[0] || 'rc';
 
       document.documentElement.style.setProperty('--brand-color', getBrandColor(currentBrand));
       document.getElementById('page-title').textContent   = BRAND_NAMES[currentBrand];

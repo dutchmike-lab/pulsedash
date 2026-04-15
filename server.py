@@ -29,6 +29,14 @@ DASHBOARD_FILE = os.path.join(PROJECT_DIR, "marketing-dashboard.html")
 
 REFRESH_INTERVAL = 3600  # 1 hour
 
+# Brands to pull — override via ACTIVE_BRANDS env var (comma-separated)
+# e.g. ACTIVE_BRANDS=rc          → RC only (online)
+# e.g. ACTIVE_BRANDS=rnr         → RNR only (local)
+# e.g. ACTIVE_BRANDS=rc,rnr      → both
+from dotenv import load_dotenv
+load_dotenv()
+ACTIVE_BRANDS = [b.strip() for b in os.getenv("ACTIVE_BRANDS", "rc,rnr,wl").split(",") if b.strip()]
+
 
 def data_file(range_key="30d"):
     return os.path.join(TMP_DIR, f"data_{range_key}.json")
@@ -46,7 +54,7 @@ def pull_range(days, range_key):
         "range_key": range_key,
     }
 
-    for b in ["rc", "rnr", "wl"]:
+    for b in ACTIVE_BRANDS:
         raw = pull_brand(b, start_date, end_date)
         output[b] = transform_for_dashboard(raw)
 
@@ -133,7 +141,7 @@ def refresh_data():
                 "date_range": {"start": start_param, "end": end_param},
                 "range_key": "custom",
             }
-            for b in ["rc", "rnr", "wl"]:
+            for b in ACTIVE_BRANDS:
                 raw = pull_brand(b, start_param, end_param)
                 output[b] = transform_for_dashboard(raw)
 

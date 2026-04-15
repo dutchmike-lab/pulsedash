@@ -648,7 +648,8 @@ def main():
     parser.add_argument("--days", type=int, default=30, help="Number of days to pull (default: 30)")
     parser.add_argument("--start", type=str, help="Start date (YYYY-MM-DD)")
     parser.add_argument("--end", type=str, help="End date (YYYY-MM-DD)")
-    parser.add_argument("--brand", type=str, choices=["rc", "rnr", "wl", "both"], default="both", help="Brand to pull")
+    parser.add_argument("--brands", type=str, default=None,
+                        help="Comma-separated brands to pull, e.g. rc or rc,rnr (default: ACTIVE_BRANDS env var or rc,rnr,wl)")
     parser.add_argument("--output", type=str, default=".tmp/data.json", help="Output file path")
     args = parser.parse_args()
 
@@ -662,7 +663,12 @@ def main():
         "prev_date_range": {"start": prev_start, "end": prev_end},
     }
 
-    brands_to_pull = ["rc", "rnr", "wl"] if args.brand == "both" else [args.brand]
+    # Priority: --brands flag > ACTIVE_BRANDS env var > default all
+    if args.brands:
+        brands_to_pull = [b.strip() for b in args.brands.split(",") if b.strip()]
+    else:
+        env_brands = os.getenv("ACTIVE_BRANDS", "")
+        brands_to_pull = [b.strip() for b in env_brands.split(",") if b.strip()] or ["rc", "rnr", "wl"]
 
     for brand in brands_to_pull:
         raw = pull_brand(brand, start_date, end_date)
