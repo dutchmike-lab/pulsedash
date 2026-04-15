@@ -251,7 +251,7 @@ def pull(grant_key: str, org_id: str = None, start_date: str = None, end_date: s
             prod_options = _get_pipeline_options(grant_key, field_ids["Production Pipeline"])
 
         # Get actual counts from job data
-        counts = _get_pipeline_counts(grant_key, org_id, batch_size=30)
+        counts = _get_pipeline_counts(grant_key, org_id, batch_size=100)
 
         # Build sales pipeline (Lead Status) in the correct order
         sales_pipeline = []

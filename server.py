@@ -220,7 +220,7 @@ def chat():
                 "- Only RC has live tool access. For rnr and wl, answer from the snapshot only.\n"
                 "Notes on data limits:\n"
                 "- Contact/job search tools scan the FULL history (all 2400+ contacts, all 771 jobs) by substring.\n"
-                "- jobtread_stage_durations and jobtread_pipeline_counts sample up to 50 jobs — counts may be partial "
+                "- jobtread_stage_durations and jobtread_pipeline_counts sample up to 100 jobs — counts may be partial "
                 "for high-volume stages. Caveat if relevant.\n"
                 "Be concise, cite specific numbers, and say plainly when data is missing. Format money with $ and percentages with %."
             ),
