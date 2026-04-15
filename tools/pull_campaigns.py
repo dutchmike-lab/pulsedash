@@ -26,10 +26,10 @@ load_dotenv()
 
 # Tab GIDs for Google Sheets
 TAB_GIDS = {
-    "campaign_data": None,           # default tab, no gid needed
-    "dashboard":     "1343838084",
-    "ranker":        "1306645481",
-    "assumptions":   "1289161274",
+    "campaign_data": None,  # gid is included in CAMPAIGN_TRACKER_URL_RC directly
+    "dashboard":     None,  # update with sheet's dashboard tab gid if available
+    "ranker":        None,  # update with sheet's ranker tab gid if available
+    "assumptions":   None,  # update with sheet's assumptions tab gid if available
 }
 
 
@@ -84,13 +84,18 @@ def _fmt_pct(n):
 
 def _load_csv_from_url(base_url, gid=None):
     """Fetch a specific tab as CSV from a published Google Sheet."""
+    import re
     import requests
     import pandas as pd
 
     url = base_url
     if gid:
-        sep = "&" if "?" in url else "?"
-        url = f"{url}{sep}gid={gid}"
+        # Replace existing gid param if present, otherwise append
+        if re.search(r'[?&]gid=', url):
+            url = re.sub(r'(gid=)[^&]*', rf'\g<1>{gid}', url)
+        else:
+            sep = "&" if "?" in url else "?"
+            url = f"{url}{sep}gid={gid}"
 
     resp = requests.get(url, timeout=30)
     resp.raise_for_status()

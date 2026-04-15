@@ -192,21 +192,28 @@ PROD_COLORS = {
 
 
 def _get_payment_data(grant_key, org_id):
-    """Query customer invoices to calculate accounts receivable."""
+    """Query customer invoices to calculate revenue closed and accounts receivable.
+
+    Fetches the 100 most recent documents (all are customerInvoice type).
+    Revenue Closed = total amountPaid on approved invoices.
+    Accounts Receivable = total unpaid balance on approved/sent invoices.
+    """
     result = _query(grant_key, {
         "organization": {
             "$": {"id": org_id},
             "documents": {
-                "$": {"size": 50, "filter": {"type": "customerInvoice"}},
+                "$": {"size": 100},
                 "nodes": {"price": True, "amountPaid": True, "status": True}
             }
         }
     })
     docs = result.get("organization", {}).get("documents", {}).get("nodes", [])
-    total_invoiced = sum(d.get("price", 0) or 0 for d in docs)
-    total_paid = sum(d.get("amountPaid", 0) or 0 for d in docs)
+    # Only count finalized (non-draft) invoices
+    active_docs = [d for d in docs if d.get("status") not in ("draft", "void", None)]
+    total_paid = sum(d.get("amountPaid", 0) or 0 for d in active_docs)
+    total_invoiced = sum(d.get("price", 0) or 0 for d in active_docs)
     ar = total_invoiced - total_paid
-    return {"accounts_receivable": ar}
+    return {"accounts_receivable": ar, "revenue_closed": total_paid}
 
 
 def pull(grant_key: str, org_id: str = None, start_date: str = None, end_date: str = None) -> dict:
@@ -284,44 +291,35 @@ def pull(grant_key: str, org_id: str = None, start_date: str = None, end_date: s
                 })
 
         # Calculate active/sold/lost
-        active_sales = sum(c for s, c in lead_data.items()
-                          if s not in ("Sold", "Dead do not call", "Drip Campaign",
-                                       "Dead", "Lost", "Disqualified",
-                                       "Builders: Bid Lost", "Retail: Lost Lead Did not sell"))
+        inactive_stages = {"Sold", "Dead do not call", "Drip Campaign",
+                           "Dead", "Lost", "Disqualified",
+                           "Builders: Bid Lost", "Retail: Lost Lead Did not sell",
+                           "Cancelled Contract"}
+        active_sales = sum(c for s, c in lead_data.items() if s not in inactive_stages)
         sold = lead_data.get("Sold", 0)
         lost = sum(lead_data.get(s, 0) for s in [
             "Builders: Bid Lost", "Retail: Lost Lead Did not sell",
             "Dead do not call", "Dead", "Lost", "Disqualified"
         ])
 
+        # Pipeline value placeholder — Pave API doesn't expose per-job financials
+        # Will show $0 until a supported API field is identified
+        pipeline_value = 0
+
         # Win rate = sold / (sold + lost)
         decided = sold + lost
         win_rate = (sold / decided * 100) if decided > 0 else 0
 
-        # Profit margin from financial data (estimate vs cost totals)
-        try:
-            fin_result = _query(grant_key, {
-                "organization": {
-                    "$": {"id": org_id},
-                    "jobs": {
-                        "$": {"size": 50},
-                        "nodes": {"estimateTotal": True, "costTotal": True}
-                    }
-                }
-            })
-            fin_jobs = fin_result.get("organization", {}).get("jobs", {}).get("nodes", [])
-            total_estimate = sum(j.get("estimateTotal", 0) or 0 for j in fin_jobs)
-            total_cost = sum(j.get("costTotal", 0) or 0 for j in fin_jobs)
-            profit_margin = ((total_estimate - total_cost) / total_estimate * 100) if total_estimate > 0 else 0
-        except Exception:
-            profit_margin = 0
+        profit_margin = 0  # Pave API does not expose estimateTotal/costTotal on jobs
 
-        # Accounts receivable from customer invoices
+        # Revenue closed and accounts receivable from customer invoices
         try:
             ar_data = _get_payment_data(grant_key, org_id)
             ar_value = ar_data.get("accounts_receivable", 0)
+            revenue_closed = ar_data.get("revenue_closed", 0)
         except Exception:
             ar_value = 0
+            revenue_closed = 0
 
         return {
             "org_name": org_name,
@@ -333,6 +331,8 @@ def pull(grant_key: str, org_id: str = None, start_date: str = None, end_date: s
                 "win_rate": {"value": f"{win_rate:.0f}%", "spark": []},
                 "profit_margin": {"value": f"{profit_margin:.1f}%", "spark": []},
                 "accounts_receivable": {"value": fmt_dollars(ar_value), "spark": []},
+                "revenue_closed": {"value": fmt_dollars(revenue_closed), "spark": []},
+                "pipeline_value": {"value": fmt_dollars(pipeline_value), "spark": []},
             },
             "sales_pipeline": sales_pipeline,
             "production_pipeline": production_pipeline,
