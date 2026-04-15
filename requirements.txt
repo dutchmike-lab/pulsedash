@@ -1,0 +1,9 @@
+flask
+python-dotenv
+requests
+google-analytics-data
+google-auth
+google-auth-oauthlib
+google-ads>=30.0.0
+facebook-business
+anthropic

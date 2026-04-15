@@ -1,0 +1,17 @@
+.env
+credentials.json
+marketing-dashboard-*.json
+token.json
+.tmp/
+__pycache__/
+*.pyc
+.DS_Store
+venv/
+*.numbers
+*.xlsx
+marketing-dashboard-backup.html
+.claude/
+Dashboard/
+passenger_wsgi.py
+docs/.pem
+*.pem

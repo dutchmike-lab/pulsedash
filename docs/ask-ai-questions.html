@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>PulseDash Ask AI — 100 Questions for Sales & C-Level</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --orange: #e07252;
+  --orange-light: rgba(224,114,82,.1);
+  --orange-mid: rgba(224,114,82,.25);
+  --black: #1a1a1a;
+  --gray1: #4b4b4b;
+  --gray2: #8a8a96;
+  --gray3: #b8b8c0;
+  --gray4: #e5e5ea;
+  --gray5: #f7f7fa;
+  --white: #ffffff;
+}
+
+html, body {
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+  background: var(--gray5);
+  color: var(--black);
+  font-size: 11pt;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+.page {
+  max-width: 8.5in;
+  margin: 0 auto;
+  background: var(--white);
+  padding: 0.65in 0.7in;
+  box-shadow: 0 2px 24px rgba(0,0,0,.06);
+}
+
+/* Cover */
+.cover {
+  border-bottom: 1px solid var(--gray4);
+  padding-bottom: 28px;
+  margin-bottom: 36px;
+}
+.brand-row {
+  display: flex; align-items: center; gap: 12px;
+  margin-bottom: 18px;
+}
+.brand-dot {
+  width: 36px; height: 36px; border-radius: 10px;
+  background: var(--orange);
+  display: grid; place-items: center;
+  color: #fff; font-weight: 800; font-size: 18px; letter-spacing: -.5px;
+}
+.brand-name { font-weight: 700; font-size: 14px; color: var(--black); }
+.brand-sub { font-size: 11px; color: var(--gray2); margin-top: 1px; }
+
+h1 {
+  font-size: 28pt; font-weight: 800; letter-spacing: -1px;
+  line-height: 1.1; color: var(--black);
+  margin-bottom: 10px;
+}
+.deck {
+  font-size: 12pt; color: var(--gray1); font-weight: 400;
+  max-width: 560px;
+}
+.meta-row {
+  display: flex; gap: 24px; margin-top: 20px;
+  font-size: 10pt; color: var(--gray2);
+}
+.meta-row b { color: var(--black); font-weight: 600; }
+
+/* TOC */
+.toc {
+  background: var(--gray5);
+  border: 1px solid var(--gray4);
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 36px;
+  font-size: 10.5pt;
+}
+.toc-title {
+  font-size: 9.5pt; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .1em;
+  color: var(--gray2); margin-bottom: 10px;
+}
+.toc ol {
+  columns: 2; column-gap: 32px;
+  list-style: none; padding: 0;
+}
+.toc li {
+  break-inside: avoid;
+  padding: 3px 0;
+  display: flex; justify-content: space-between;
+  border-bottom: 1px dotted var(--gray4);
+}
+.toc li a { color: var(--gray1); text-decoration: none; }
+.toc li:hover a { color: var(--orange); }
+.toc-range { color: var(--gray3); font-variant-numeric: tabular-nums; }
+
+/* Sections */
+section {
+  break-inside: avoid-page;
+  margin-bottom: 32px;
+}
+section h2 {
+  font-size: 15pt; font-weight: 700;
+  color: var(--black);
+  padding-bottom: 8px;
+  margin-bottom: 14px;
+  border-bottom: 2px solid var(--orange);
+  display: flex; align-items: baseline; justify-content: space-between;
+}
+section h2 .count {
+  font-size: 9.5pt; font-weight: 600;
+  color: var(--gray2);
+  background: var(--orange-light);
+  padding: 3px 10px; border-radius: 20px;
+  letter-spacing: .02em;
+}
+section .blurb {
+  font-size: 10pt; color: var(--gray2);
+  margin-bottom: 14px;
+  margin-top: -6px;
+}
+
+ol.questions {
+  list-style: none; padding: 0;
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 8px 24px;
+}
+ol.questions li {
+  break-inside: avoid;
+  display: flex; gap: 10px;
+  font-size: 10.5pt; line-height: 1.45;
+  padding: 6px 0;
+  border-bottom: 1px solid var(--gray5);
+}
+ol.questions li .num {
+  flex-shrink: 0;
+  color: var(--orange);
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  min-width: 22px;
+}
+
+/* Footer / coverage */
+.footer-note {
+  margin-top: 30px;
+  padding: 16px 18px;
+  background: var(--orange-light);
+  border-left: 3px solid var(--orange);
+  border-radius: 6px;
+  font-size: 10pt; color: var(--gray1);
+}
+.footer-note b { color: var(--black); }
+
+.sign {
+  margin-top: 28px; padding-top: 18px;
+  border-top: 1px solid var(--gray4);
+  font-size: 9.5pt; color: var(--gray2);
+  display: flex; justify-content: space-between;
+}
+.sign b { color: var(--gray1); font-weight: 600; }
+
+/* Print */
+@media print {
+  body { background: white; }
+  .page { box-shadow: none; padding: 0.45in 0.55in; max-width: 100%; }
+  section { break-inside: avoid-page; }
+  ol.questions li { break-inside: avoid; }
+  .toc { break-after: page; }
+  @page { size: letter; margin: 0.4in; }
+}
+</style>
+</head>
+<body>
+
+<div class="page">
+
+<!-- Cover -->
+<div class="cover">
+  <div class="brand-row">
+    <div class="brand-dot">P</div>
+    <div>
+      <div class="brand-name">PulseDash · Ask AI</div>
+      <div class="brand-sub">Remodeling Concepts · Ryann Reed · Wood Lane Golf</div>
+    </div>
+  </div>
+  <h1>100 Questions Sales &amp; Leadership Can Ask the AI</h1>
+  <p class="deck">A playbook of natural-language prompts that tap directly into JobTread, the dashboard snapshot, and live pipeline data. Use them as a starting point — paraphrase freely; the AI handles intent.</p>
+  <div class="meta-row">
+    <span><b>Prepared for:</b> RC / RNR leadership + sales</span>
+    <span><b>Coverage:</b> JobTread live (RC) + multi-brand snapshot</span>
+  </div>
+</div>
+
+<!-- TOC -->
+<div class="toc">
+  <div class="toc-title">Contents</div>
+  <ol>
+    <li><a href="#pipeline">Pipeline Health</a><span class="toc-range">1–15</span></li>
+    <li><a href="#reps">Sales Rep Performance</a><span class="toc-range">16–30</span></li>
+    <li><a href="#customers">Customer &amp; Project Lookups</a><span class="toc-range">31–45</span></li>
+    <li><a href="#financials">Financials &amp; AR</a><span class="toc-range">46–60</span></li>
+    <li><a href="#schedule">Scheduling &amp; Upcoming Work</a><span class="toc-range">61–75</span></li>
+    <li><a href="#production">Production &amp; Operations</a><span class="toc-range">76–85</span></li>
+    <li><a href="#marketing">Marketing → Sales Funnel</a><span class="toc-range">86–92</span></li>
+    <li><a href="#exec">Strategic &amp; Executive</a><span class="toc-range">93–100</span></li>
+  </ol>
+</div>
+
+<!-- Pipeline -->
+<section id="pipeline">
+  <h2>Pipeline Health <span class="count">15 questions</span></h2>
+  <div class="blurb">Stage counts, time-in-stage, bottleneck detection, and where leads stall.</div>
+  <ol class="questions">
+    <li><span class="num">1.</span>How many leads are in each stage of the sales pipeline right now?</li>
+    <li><span class="num">2.</span>Which stage has the most leads stuck in it?</li>
+    <li><span class="num">3.</span>What's the average time leads spend in "Retail: Appointment Set"?</li>
+    <li><span class="num">4.</span>Which leads have been sitting in "Retail: Estimating" the longest?</li>
+    <li><span class="num">5.</span>How many leads moved to "Sold" this month vs. last month?</li>
+    <li><span class="num">6.</span>What's our total active pipeline count?</li>
+    <li><span class="num">7.</span>Which stages are bottlenecks right now — where are leads getting stuck longest?</li>
+    <li><span class="num">8.</span>How many leads are in "Retail: Proposal Follow Up" and what's the average days there?</li>
+    <li><span class="num">9.</span>What's the oldest active lead we have?</li>
+    <li><span class="num">10.</span>How many leads are in "Drip Campaign" — are we recycling them?</li>
+    <li><span class="num">11.</span>Show me the top 10 stalest leads across all stages.</li>
+    <li><span class="num">12.</span>What's the breakdown of Retail vs. Builders leads in the pipeline?</li>
+    <li><span class="num">13.</span>Which leads have been in the same stage for more than 30 days?</li>
+    <li><span class="num">14.</span>How many leads are in "Dead do not call" vs. active?</li>
+    <li><span class="num">15.</span>What's our conversion rate from "New Lead" to "Sold"?</li>
+  </ol>
+</section>
+
+<!-- Reps -->
+<section id="reps">
+  <h2>Sales Rep Performance <span class="count">15 questions</span></h2>
+  <div class="blurb">Individual rep pipelines, win rates, deal velocity, and workload.</div>
+  <ol class="questions">
+    <li><span class="num">16.</span>How is Mark Lopergolo's pipeline looking?</li>
+    <li><span class="num">17.</span>Which sales rep has the most leads in "Appointment Set"?</li>
+    <li><span class="num">18.</span>What's Mark's win rate this quarter?</li>
+    <li><span class="num">19.</span>How many deals has Mark closed recently?</li>
+    <li><span class="num">20.</span>Which sales rep has the oldest stuck leads?</li>
+    <li><span class="num">21.</span>Show me all of Mark's active (non-sold, non-lost) leads.</li>
+    <li><span class="num">22.</span>Who has the most deals in "Quoted" right now?</li>
+    <li><span class="num">23.</span>What's the average deal size Mark has sold?</li>
+    <li><span class="num">24.</span>Which rep has the highest average time-in-stage (slowest to move leads)?</li>
+    <li><span class="num">25.</span>How many leads is each sales rep actively working?</li>
+    <li><span class="num">26.</span>Which rep has the most "Lost Lead" entries — are they over-qualifying?</li>
+    <li><span class="num">27.</span>Show me Mark's proposal follow-ups he needs to chase.</li>
+    <li><span class="num">28.</span>Which rep has the highest-value pipeline right now?</li>
+    <li><span class="num">29.</span>Which rep has no activity this week?</li>
+    <li><span class="num">30.</span>What's each sales rep's conversion rate from "Appointment Set" to "Sold"?</li>
+  </ol>
+</section>
+
+<!-- Customers -->
+<section id="customers">
+  <h2>Customer &amp; Project Lookups <span class="count">15 questions</span></h2>
+  <div class="blurb">Specific-customer and specific-project questions — the AI looks them up live in JobTread.</div>
+  <ol class="questions">
+    <li><span class="num">31.</span>When does Mark have an appointment with Terry McKeever?</li>
+    <li><span class="num">32.</span>What's the status of the 1119 Robin Rd project?</li>
+    <li><span class="num">33.</span>Did the Dan Tassone project end up over budget?</li>
+    <li><span class="num">34.</span>How much has Dan Tassone paid us total?</li>
+    <li><span class="num">35.</span>Look up every job we've done for the Marinello family.</li>
+    <li><span class="num">36.</span>What's the latest activity on 221 Holly Dr?</li>
+    <li><span class="num">37.</span>When was the last daily log on Terry McKeever's job?</li>
+    <li><span class="num">38.</span>What's the approved price on the Cornwell Full Exterior job?</li>
+    <li><span class="num">39.</span>Has the 12 Terrell Road - Windows job been fully paid?</li>
+    <li><span class="num">40.</span>Show me all jobs for customer "Wood" or "Woodson".</li>
+    <li><span class="num">41.</span>Which customers have multiple jobs with us?</li>
+    <li><span class="num">42.</span>What's the largest job we've sold this year?</li>
+    <li><span class="num">43.</span>Find all jobs on Robin Rd — is it a cluster of neighbors?</li>
+    <li><span class="num">44.</span>Who was the sales rep on the Cornwell job?</li>
+    <li><span class="num">45.</span>How long was the 1820 Jericho Dr job in "Quoted" before selling?</li>
+  </ol>
+</section>
+
+<!-- Financials -->
+<section id="financials">
+  <h2>Financials &amp; AR <span class="count">15 questions</span></h2>
+  <div class="blurb">Outstanding balances, aging, collections, and revenue health.</div>
+  <ol class="questions">
+    <li><span class="num">46.</span>Who owes us the most money right now?</li>
+    <li><span class="num">47.</span>What's our total outstanding accounts receivable?</li>
+    <li><span class="num">48.</span>Which invoices are oldest and still unpaid?</li>
+    <li><span class="num">49.</span>What's the biggest overdue invoice right now?</li>
+    <li><span class="num">50.</span>Show me invoices over 90 days past due.</li>
+    <li><span class="num">51.</span>What's our total collected vs. invoiced this year?</li>
+    <li><span class="num">52.</span>Which jobs have the biggest outstanding balance?</li>
+    <li><span class="num">53.</span>How much does Terry McKeever owe us?</li>
+    <li><span class="num">54.</span>What's our average invoice size for customer payments?</li>
+    <li><span class="num">55.</span>Which customers have paid in full?</li>
+    <li><span class="num">56.</span>Show me jobs that are approved but not yet invoiced.</li>
+    <li><span class="num">57.</span>What's our total approved-orders pipeline (work sold but in progress)?</li>
+    <li><span class="num">58.</span>How much work is sitting in proposals waiting for signature?</li>
+    <li><span class="num">59.</span>Which invoices got denied and why?</li>
+    <li><span class="num">60.</span>What's our total collected this month vs. last month?</li>
+  </ol>
+</section>
+
+<!-- Schedule -->
+<section id="schedule">
+  <h2>Scheduling &amp; Upcoming Work <span class="count">15 questions</span></h2>
+  <div class="blurb">Calendar and upcoming-task visibility for sales and ops.</div>
+  <ol class="questions">
+    <li><span class="num">61.</span>What appointments are on the calendar this week?</li>
+    <li><span class="num">62.</span>Any installations scheduled for tomorrow?</li>
+    <li><span class="num">63.</span>What's Mark's schedule next week?</li>
+    <li><span class="num">64.</span>Which jobs have a "Measurement Scheduled" task upcoming?</li>
+    <li><span class="num">65.</span>Show me every task with "Appointment" in the name this month.</li>
+    <li><span class="num">66.</span>Any jobs missing a scheduled start date?</li>
+    <li><span class="num">67.</span>What work is scheduled for next Monday?</li>
+    <li><span class="num">68.</span>How many appointments did we do last month?</li>
+    <li><span class="num">69.</span>Which tasks start in the next 3 days?</li>
+    <li><span class="num">70.</span>Are there any overlapping installations on the same day?</li>
+    <li><span class="num">71.</span>What production tasks are coming up this week?</li>
+    <li><span class="num">72.</span>Show me the next 10 tasks on the calendar.</li>
+    <li><span class="num">73.</span>Any appointments rescheduled or moved recently?</li>
+    <li><span class="num">74.</span>Which customers have upcoming "Initial Appointment Start" dates?</li>
+    <li><span class="num">75.</span>How booked is our install crew next week?</li>
+  </ol>
+</section>
+
+<!-- Production -->
+<section id="production">
+  <h2>Production &amp; Operations <span class="count">10 questions</span></h2>
+  <div class="blurb">Field activity, production pipeline, and daily-log insight.</div>
+  <ol class="questions">
+    <li><span class="num">76.</span>Which jobs are currently in "Work in Progress"?</li>
+    <li><span class="num">77.</span>How many jobs are in "Ready to Schedule" waiting on us?</li>
+    <li><span class="num">78.</span>Which jobs are stuck in "On Hold" and why (check daily logs)?</li>
+    <li><span class="num">79.</span>What's the latest field update on all active install jobs?</li>
+    <li><span class="num">80.</span>Which jobs are in "Punch List" and how long have they been there?</li>
+    <li><span class="num">81.</span>What did we do at the 88 Keller Rd job this week?</li>
+    <li><span class="num">82.</span>Show me every daily log mentioning a weather delay.</li>
+    <li><span class="num">83.</span>Which jobs are flagged as "Pending Shingle Color"?</li>
+    <li><span class="num">84.</span>How many jobs closed production this month?</li>
+    <li><span class="num">85.</span>Are there any customer complaints mentioned in recent daily logs?</li>
+  </ol>
+</section>
+
+<!-- Marketing -->
+<section id="marketing">
+  <h2>Marketing → Sales Funnel <span class="count">7 questions</span></h2>
+  <div class="blurb">Top-of-funnel + cross-brand comparisons from the dashboard snapshot.</div>
+  <ol class="questions">
+    <li><span class="num">86.</span>Which lead source is driving the most RC leads this month?</li>
+    <li><span class="num">87.</span>How did RC leads compare to Ryann Reed this month?</li>
+    <li><span class="num">88.</span>What's our cost per lead by channel?</li>
+    <li><span class="num">89.</span>Which marketing channel is converting best to Sold?</li>
+    <li><span class="num">90.</span>Was email stronger than Google Ads this period?</li>
+    <li><span class="num">91.</span>How many leads came from the website vs. referrals last 30 days?</li>
+    <li><span class="num">92.</span>Is Ryann Reed pulling its weight vs. Remodeling Concepts?</li>
+  </ol>
+</section>
+
+<!-- Executive -->
+<section id="exec">
+  <h2>Strategic &amp; Executive <span class="count">8 questions</span></h2>
+  <div class="blurb">Synthesis questions — the AI combines pipeline, AR, and activity to answer.</div>
+  <ol class="questions">
+    <li><span class="num">93.</span>What are the 3 biggest risks in our pipeline right now?</li>
+    <li><span class="num">94.</span>If I could only fix one bottleneck this week, which would it be?</li>
+    <li><span class="num">95.</span>What's our forecast close rate based on current stage durations?</li>
+    <li><span class="num">96.</span>Which deals are most likely to slip if we don't act this week?</li>
+    <li><span class="num">97.</span>Where are we leaking revenue — AR, stalled quotes, or lost leads?</li>
+    <li><span class="num">98.</span>What's changed most dramatically this month vs. last?</li>
+    <li><span class="num">99.</span>Give me a one-paragraph status of the business right now.</li>
+    <li><span class="num">100.</span>What should I (the owner) care about most this week?</li>
+  </ol>
+</section>
+
+<!-- Footer -->
+<div class="footer-note">
+  <b>Coverage:</b> #1–85 all route to live JobTread tools (search contacts, pipeline stages, AR aging, daily logs, tasks, sales-rep lookups). #86–92 lean on the daily dashboard snapshot. #93–100 are synthesis questions — the AI chains multiple tool calls to answer them. For marketing/channel data on RNR and WL, reconnect GHL or GA4 when ready.
+</div>
+
+<div class="sign">
+  <span><b>PulseDash</b> — company-wide marketing &amp; ops intelligence</span>
+  <span>Open "Ask AI" tab at <b>localhost:5050</b> to start</span>
+</div>
+
+</div>
+</body>
+</html>

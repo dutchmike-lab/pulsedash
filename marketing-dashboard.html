@@ -1,0 +1,2685 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PulseDash — Marketing</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root {
+  --orange:       #e07252;
+  --orange-light: rgba(224,114,82,.12);
+  --orange-mid:   rgba(224,114,82,.25);
+  --black:        #1a1a1a;
+  --gray1:        #4b4b4b;
+  --gray2:        #8a8a96;
+  --gray3:        #b8b8c0;
+  --gray4:        #e5e5ea;
+  --gray5:        #f2f2f5;
+  --white:        #ffffff;
+  --sidebar-w:    248px;
+  --header-h:     68px;
+  --green:        #27ae60;
+  --green-bg:     rgba(39,174,96,.1);
+  --red:          #e74c3c;
+  --red-bg:       rgba(231,76,60,.1);
+  --rc-color:     #e07252;
+  --rnr-color:    #8b5cf6;
+  --wl-color:     #27ae60;
+  --brand-color:  var(--rc-color);
+  --radius-card:  20px;
+  --radius-pill:  12px;
+  --radius-sm:    8px;
+  --shadow-card:  0 2px 12px rgba(0,0,0,0.06);
+  --shadow-hover: 0 6px 24px rgba(0,0,0,0.10);
+}
+
+body {
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,sans-serif;
+  background: var(--gray5);
+  color: var(--black);
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 100vh;
+  display: flex;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ══════════════════════════════════
+   SIDEBAR
+══════════════════════════════════ */
+.sidebar {
+  width: var(--sidebar-w);
+  flex-shrink: 0;
+  background: var(--white);
+  position: fixed;
+  top: 0; left: 0; bottom: 0;
+  z-index: 200;
+  display: flex;
+  flex-direction: column;
+  border-right: 1px solid var(--gray4);
+  overflow-y: auto;
+}
+
+/* Logo / brand */
+.sidebar-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 22px 20px 18px;
+  border-bottom: 1px solid var(--gray5);
+}
+.brand-icon {
+  width: 38px; height: 38px;
+  border-radius: 10px;
+  background: var(--orange);
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+}
+.brand-icon svg { width: 20px; height: 20px; }
+.brand-name { font-size: 15px; font-weight: 700; color: var(--black); letter-spacing: -0.02em; }
+.brand-sub  { font-size: 11px; color: var(--gray2); margin-top: 1px; }
+
+/* Help box */
+.sidebar-help {
+  margin: 16px 14px 8px;
+  background: var(--gray5);
+  border-radius: var(--radius-pill);
+  padding: 14px 14px 12px;
+}
+.help-title { font-size: 14px; font-weight: 700; color: var(--black); }
+.help-title .wave { font-size: 16px; }
+.help-sub { font-size: 11.5px; color: var(--orange); font-weight: 500; margin-top: 2px; }
+
+/* Nav */
+.nav-section { padding: 14px 14px 2px; }
+.nav-label {
+  font-size: 10px; font-weight: 700;
+  letter-spacing: .08em; text-transform: uppercase;
+  color: var(--gray3); margin-bottom: 6px; padding: 0 6px;
+}
+.nav-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 14px;
+  border-radius: var(--radius-pill);
+  border: none; background: transparent;
+  color: var(--gray1); font-size: 13.5px; font-weight: 500;
+  cursor: pointer; width: 100%; text-align: left;
+  font-family: inherit; letter-spacing: -0.01em;
+  transition: all .15s ease; position: relative;
+  gap: 8px;
+}
+.nav-item-left { display: flex; align-items: center; gap: 10px; }
+.nav-item svg { width: 16px; height: 16px; flex-shrink: 0; opacity: .65; }
+.nav-item:hover { background: var(--gray5); color: var(--black); }
+.nav-item.active {
+  background: var(--black);
+  color: var(--white);
+  font-weight: 600;
+}
+.nav-item.active svg { opacity: 1; filter: invert(1); }
+.nav-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--orange); flex-shrink: 0;
+}
+
+/* Brand sub-items */
+.nav-brand-item {
+  display: flex; align-items: center; gap: 10px;
+  padding: 9px 14px;
+  border-radius: var(--radius-pill);
+  border: none; background: transparent;
+  color: var(--gray1); font-size: 13px; font-weight: 500;
+  cursor: pointer; width: 100%; text-align: left;
+  font-family: inherit; transition: all .15s;
+}
+.nav-brand-item:hover { background: var(--gray5); color: var(--black); }
+.nav-brand-item.active { color: var(--black); font-weight: 600; }
+.nav-brand-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+
+.sidebar-footer { margin-top: auto; padding: 14px; border-top: 1px solid var(--gray5); }
+.settings-btn {
+  display: flex; align-items: center; gap: 10px;
+  padding: 10px 14px; border-radius: var(--radius-pill);
+  border: none; background: transparent;
+  color: var(--gray2); font-size: 13px; font-weight: 500;
+  cursor: pointer; width: 100%; text-align: left; font-family: inherit;
+  transition: all .15s;
+}
+.settings-btn:hover { background: var(--gray5); color: var(--black); }
+.settings-btn svg { width: 16px; height: 16px; }
+
+/* ══════════════════════════════════
+   MAIN WRAPPER
+══════════════════════════════════ */
+.main-wrapper {
+  margin-left: var(--sidebar-w);
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ══════════════════════════════════
+   TOP HEADER
+══════════════════════════════════ */
+.top-header {
+  background: var(--white);
+  border-bottom: 1px solid var(--gray4);
+  height: var(--header-h);
+  display: flex; align-items: center;
+  padding: 0 32px; gap: 16px;
+  position: sticky; top: 0; z-index: 100;
+}
+
+.search-bar {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--gray5); border-radius: 40px;
+  padding: 9px 18px; flex: 1; max-width: 340px;
+  border: 1.5px solid transparent; transition: border-color .15s;
+}
+.search-bar:focus-within { border-color: var(--orange); }
+.search-bar svg { width: 15px; height: 15px; color: var(--gray3); flex-shrink: 0; }
+.search-bar input {
+  border: none; background: transparent; outline: none;
+  font-family: inherit; font-size: 13px; color: var(--gray1);
+  width: 100%;
+}
+.search-bar input::placeholder { color: var(--gray3); }
+
+.header-right { display: flex; align-items: center; gap: 14px; margin-left: auto; }
+.date-chip {
+  display: flex; align-items: center; gap: 10px;
+  background: var(--gray5); border-radius: 12px;
+  padding: 8px 14px; cursor: pointer;
+}
+.date-day { font-size: 22px; font-weight: 800; color: var(--black); line-height: 1; }
+.date-detail { font-size: 11px; color: var(--gray2); line-height: 1.4; }
+.date-icon { color: var(--gray2); }
+.date-icon svg { width: 18px; height: 18px; }
+
+.range-pills {
+  display: flex; align-items: center; gap: 3px;
+  background: var(--gray5); border-radius: 10px; padding: 3px;
+}
+.r-btn {
+  padding: 5px 12px; border-radius: 8px; border: none;
+  background: transparent; color: var(--gray2); font-size: 12.5px;
+  font-weight: 500; cursor: pointer; font-family: inherit; transition: all .15s;
+}
+.r-btn:hover { color: var(--black); }
+.r-btn.active {
+  background: var(--white); color: var(--black);
+  font-weight: 700; box-shadow: 0 1px 4px rgba(0,0,0,.1);
+}
+
+.custom-date-wrap {
+  display: flex; align-items: center; gap: 6px; font-size: 12px; color: var(--gray2);
+}
+.custom-date-wrap input {
+  background: var(--gray5); border: 1px solid var(--gray4); border-radius: 8px;
+  color: var(--black); padding: 5px 9px; font-size: 12px;
+  outline: none; font-family: inherit;
+}
+.custom-date-wrap input:focus { border-color: var(--orange); }
+
+.avatar-wrap {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--orange), #c0392b);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: var(--white);
+  cursor: pointer; flex-shrink: 0;
+}
+
+/* ══════════════════════════════════
+   CONTENT AREA
+══════════════════════════════════ */
+.content {
+  padding: 32px 32px 48px;
+  flex: 1;
+}
+
+.page-eyebrow {
+  font-size: 12px; color: var(--gray2); margin-bottom: 6px;
+  display: flex; align-items: center; gap: 6px;
+}
+.page-eyebrow span { color: var(--gray3); }
+
+.page-title {
+  font-size: 34px; font-weight: 800;
+  letter-spacing: -0.04em; color: var(--black);
+  margin-bottom: 6px; line-height: 1.1;
+}
+.page-sub {
+  font-size: 13px; color: var(--gray2); margin-bottom: 28px;
+  display: flex; align-items: center; gap: 8px;
+}
+.live-badge {
+  display: inline-flex; align-items: center; gap: 5px;
+  background: var(--green-bg); color: var(--green);
+  font-size: 11px; font-weight: 600; padding: 3px 9px;
+  border-radius: 20px;
+}
+.live-badge::before {
+  content: '';
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--green);
+  animation: pulse-dot 2s infinite;
+}
+@keyframes pulse-dot {
+  0%,100% { opacity: 1; }
+  50% { opacity: .3; }
+}
+
+/* ══════════════════════════════════
+   DASHBOARD GRID
+══════════════════════════════════ */
+.dash-grid {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  gap: 16px;
+}
+
+.card {
+  background: var(--white);
+  border-radius: var(--radius-card);
+  padding: 24px;
+  box-shadow: var(--shadow-card);
+  transition: box-shadow .2s, transform .2s;
+  position: relative; overflow: hidden;
+}
+.card:hover { box-shadow: var(--shadow-hover); transform: translateY(-2px); }
+
+.col-4  { grid-column: span 4; }
+.col-5  { grid-column: span 5; }
+.col-6  { grid-column: span 6; }
+.col-7  { grid-column: span 7; }
+.col-8  { grid-column: span 8; }
+.col-12 { grid-column: span 12; }
+.col-3  { grid-column: span 3; }
+
+/* Card header row */
+.card-hd {
+  display: flex; align-items: flex-start; justify-content: space-between;
+  margin-bottom: 12px;
+}
+.card-label {
+  font-size: 11px; font-weight: 700; letter-spacing: .07em;
+  text-transform: uppercase; color: var(--gray2);
+}
+.card-sub { font-size: 11px; color: var(--gray3); margin-top: 1px; }
+.card-icon-wrap {
+  width: 32px; height: 32px; border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 15px; flex-shrink: 0;
+}
+.ci-orange { background: var(--orange-light); color: var(--orange); }
+.ci-green  { background: var(--green-bg); color: var(--green); }
+.ci-purple { background: rgba(139,92,246,.1); color: #8b5cf6; }
+.ci-blue   { background: rgba(52,152,219,.1); color: #3498db; }
+.ci-gray   { background: var(--gray5); color: var(--gray2); }
+
+/* Big stat */
+.card-number {
+  font-size: 42px; font-weight: 900;
+  letter-spacing: -0.05em; color: var(--black);
+  line-height: 1; margin-bottom: 8px;
+}
+.card-number.med { font-size: 30px; }
+.card-number.sm  { font-size: 22px; }
+
+.trend-pill {
+  display: inline-flex; align-items: center; gap: 3px;
+  font-size: 11.5px; font-weight: 600;
+  padding: 3px 9px; border-radius: 20px;
+}
+.trend-pill.up   { background: var(--green-bg); color: var(--green); }
+.trend-pill.down { background: var(--red-bg); color: var(--red); }
+.trend-pill.flat { background: var(--gray5); color: var(--gray2); }
+
+/* Sparkline canvas */
+.spark-canvas {
+  position: absolute; bottom: 0; right: 0;
+  width: 55%; height: 70px; opacity: 0.35; pointer-events: none;
+}
+
+/* Dot matrix chart */
+.dot-matrix {
+  display: grid;
+  gap: 5px;
+}
+.dot {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: var(--gray4);
+  transition: background .2s;
+}
+.dot.active { background: var(--orange); }
+.dot.active-light { background: var(--orange-mid); }
+
+/* Stat rows */
+.stat-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 10px 0; border-bottom: 1px solid var(--gray5);
+}
+.stat-row:last-child { border-bottom: none; }
+.stat-name { font-size: 13px; color: var(--gray1); }
+.stat-val  { font-size: 14px; font-weight: 700; color: var(--black); }
+
+/* Pipeline bars */
+.pipe-row { display: flex; align-items: center; gap: 10px; padding: 7px 0; }
+.pipe-label { font-size: 12.5px; color: var(--gray1); width: 120px; flex-shrink: 0; }
+.pipe-track { flex: 1; height: 8px; background: var(--gray5); border-radius: 4px; overflow: hidden; }
+.pipe-fill  { height: 100%; border-radius: 4px; background: var(--orange); transition: width .5s ease; }
+.pipe-count { font-size: 12.5px; font-weight: 700; color: var(--black); width: 32px; text-align: right; }
+
+/* Activity items */
+.activity-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 10px 0; border-bottom: 1px solid var(--gray5);
+}
+.activity-item:last-child { border-bottom: none; }
+.activity-icon { width: 36px; height: 36px; border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+.activity-info { flex: 1; }
+.activity-name { font-size: 13px; font-weight: 600; color: var(--black); }
+.activity-meta { font-size: 11.5px; color: var(--gray2); }
+.activity-val  { font-size: 14px; font-weight: 700; color: var(--black); }
+
+/* View more */
+.view-more {
+  font-size: 12px; font-weight: 600; color: var(--orange);
+  border: none; background: none; cursor: pointer; font-family: inherit;
+  padding: 0; transition: opacity .15s;
+}
+.view-more:hover { opacity: .7; }
+
+/* Not configured */
+.not-configured {
+  display: flex; flex-direction: column; align-items: center;
+  justify-content: center; min-height: 80px; text-align: center;
+  color: var(--gray3); font-size: 13px;
+}
+
+/* Modal */
+.modal-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,.45);
+  z-index: 500; display: flex; align-items: center; justify-content: center;
+  opacity: 0; visibility: hidden; transition: all .2s; backdrop-filter: blur(4px);
+}
+.modal-overlay.open { opacity: 1; visibility: visible; }
+.modal-content {
+  background: var(--white); border-radius: var(--radius-card);
+  box-shadow: 0 24px 60px rgba(0,0,0,.15); width: 90%; max-width: 760px;
+  max-height: 85vh; overflow-y: auto; padding: 36px;
+  transform: scale(.97); transition: transform .2s;
+}
+.modal-overlay.open .modal-content { transform: scale(1); }
+.modal-close {
+  position: absolute; top: 18px; right: 18px;
+  width: 30px; height: 30px; border-radius: 8px;
+  border: 1px solid var(--gray4); background: var(--white);
+  color: var(--gray2); cursor: pointer; font-size: 14px;
+  display: flex; align-items: center; justify-content: center;
+}
+.modal-close:hover { background: var(--gray5); color: var(--black); }
+
+/* Misc */
+.hidden { display: none !important; }
+canvas.spark { display: block; }
+
+@media (max-width: 1200px) {
+  .col-4 { grid-column: span 6; }
+  .col-5 { grid-column: span 6; }
+  .col-7 { grid-column: span 6; }
+  .col-3 { grid-column: span 4; }
+}
+@media (max-width: 900px) {
+  :root { --sidebar-w: 60px; }
+  .sidebar-brand .brand-name, .sidebar-brand .brand-sub,
+  .sidebar-help, .nav-label, .nav-item span, .nav-brand-item span,
+  .settings-btn span { display: none; }
+  .nav-item { padding: 10px; justify-content: center; }
+  .nav-item-left { gap: 0; }
+  .nav-dot { display: none; }
+}
+@media (max-width: 640px) {
+  .sidebar { display: none; }
+  .main-wrapper { margin-left: 0; }
+  .dash-grid { grid-template-columns: 1fr; }
+  .col-4,.col-5,.col-6,.col-7,.col-8,.col-12,.col-3 { grid-column: span 1; }
+  .content { padding: 16px; }
+}
+
+/* Executive hero grid */
+.exec-hero-grid {
+  display: grid;
+  grid-template-columns: repeat(6, 1fr);
+  gap: 16px;
+  margin-bottom: 16px;
+}
+.exec-hero-grid .card { grid-column: span 1; }
+@media (max-width: 1200px) {
+  .exec-hero-grid { grid-template-columns: repeat(3, 1fr) !important; }
+}
+@media (max-width: 768px) {
+  .exec-hero-grid { grid-template-columns: repeat(2, 1fr) !important; }
+}
+
+/* ══════════════════════════════════
+   ASK AI (chat)
+══════════════════════════════════ */
+.ai-wrap {
+  display: flex; flex-direction: column;
+  height: calc(100vh - var(--header-h) - 180px);
+  min-height: 500px;
+  background: var(--white);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-card);
+  overflow: hidden;
+}
+.ai-messages {
+  flex: 1; overflow-y: auto; padding: 24px 28px;
+  display: flex; flex-direction: column; gap: 16px;
+}
+.ai-msg { max-width: 80%; padding: 12px 16px; border-radius: 14px; font-size: 14px; line-height: 1.55; }
+.ai-msg.user { white-space: pre-wrap; }
+.ai-msg.assistant h3, .ai-msg.assistant h4 { font-size: 13.5px; font-weight: 700; margin: 10px 0 6px; color: var(--black); }
+.ai-msg.assistant h3:first-child, .ai-msg.assistant h4:first-child { margin-top: 0; }
+.ai-msg.assistant p { margin: 6px 0; }
+.ai-msg.assistant p:first-child { margin-top: 0; }
+.ai-msg.assistant p:last-child { margin-bottom: 0; }
+.ai-msg.assistant ul { margin: 6px 0 6px 18px; padding: 0; }
+.ai-msg.assistant li { margin: 3px 0; }
+.ai-msg.assistant strong { font-weight: 600; color: var(--black); }
+.ai-msg.assistant code { background: rgba(0,0,0,.06); padding: 1px 5px; border-radius: 4px; font-family: 'SF Mono', Menlo, monospace; font-size: 12.5px; }
+.ai-msg.assistant table {
+  width: 100%; border-collapse: collapse;
+  margin: 10px 0; font-size: 12.5px;
+  background: var(--white);
+  border-radius: 8px; overflow: hidden;
+  box-shadow: 0 0 0 1px var(--gray4);
+}
+.ai-msg.assistant th {
+  background: var(--gray5); color: var(--gray1);
+  font-weight: 600; text-align: left;
+  padding: 8px 10px; font-size: 11px;
+  text-transform: uppercase; letter-spacing: .04em;
+  border-bottom: 1px solid var(--gray4);
+}
+.ai-msg.assistant td {
+  padding: 8px 10px; border-bottom: 1px solid var(--gray4);
+  vertical-align: top;
+}
+.ai-msg.assistant tr:last-child td { border-bottom: none; }
+.ai-msg.assistant tr:hover td { background: var(--gray5); }
+.ai-msg.assistant td.num, .ai-msg.assistant th.num { text-align: right; font-variant-numeric: tabular-nums; }
+.ai-msg.user { align-self: flex-end; background: var(--brand-color); color: var(--white); border-bottom-right-radius: 4px; }
+.ai-msg.assistant { align-self: flex-start; background: var(--gray5); color: var(--black); border-bottom-left-radius: 4px; }
+.ai-msg.assistant.loading { opacity: .6; font-style: italic; }
+.ai-msg.error { align-self: flex-start; background: var(--red-bg); color: var(--red); border-bottom-left-radius: 4px; }
+.ai-empty {
+  margin: auto; text-align: center; color: var(--gray2);
+  display: flex; flex-direction: column; align-items: center; gap: 18px; padding: 20px;
+}
+.ai-empty h3 { font-size: 18px; font-weight: 600; color: var(--black); }
+.ai-empty p { font-size: 13px; max-width: 420px; }
+.ai-chips { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin-top: 8px; }
+.ai-chip {
+  background: var(--gray5); color: var(--gray1); border: 1px solid var(--gray4);
+  padding: 8px 14px; border-radius: 999px; font-size: 12.5px; cursor: pointer;
+  font-family: inherit; transition: all .15s;
+}
+.ai-chip:hover { border-color: var(--brand-color); color: var(--brand-color); background: var(--white); }
+.ai-input-wrap {
+  border-top: 1px solid var(--gray4); padding: 14px 20px;
+  display: flex; gap: 10px; align-items: flex-end; background: var(--white);
+}
+.ai-input {
+  flex: 1; border: 1px solid var(--gray4); border-radius: 14px;
+  padding: 12px 16px; font-size: 14px; font-family: inherit; resize: none;
+  min-height: 44px; max-height: 160px; outline: none; background: var(--gray5);
+  line-height: 1.5;
+}
+.ai-input:focus { border-color: var(--brand-color); background: var(--white); }
+.ai-send {
+  background: var(--brand-color); color: var(--white); border: none;
+  width: 44px; height: 44px; border-radius: 12px; cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: opacity .15s;
+}
+.ai-send:hover { opacity: .85; }
+.ai-send:disabled { opacity: .4; cursor: not-allowed; }
+.ai-send svg { width: 18px; height: 18px; }
+.ai-meta {
+  padding: 8px 20px; font-size: 11px; color: var(--gray2);
+  border-top: 1px solid var(--gray4); background: var(--gray5);
+  display: flex; justify-content: space-between;
+}
+
+/* Form table */
+.form-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.form-table th {
+  text-align: left; padding: 9px 8px; font-size: 10.5px; font-weight: 700;
+  color: var(--gray3); text-transform: uppercase; letter-spacing: .06em;
+  border-bottom: 1px solid var(--gray5);
+}
+.form-table td {
+  padding: 10px 8px; border-bottom: 1px solid var(--gray5);
+}
+.form-table td:last-child { text-align: right; }
+.form-table th:last-child { text-align: right; }
+
+::-webkit-scrollbar { width: 5px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--gray4); border-radius: 3px; }
+
+/* Campaign table */
+.camp-table { width: 100%; border-collapse: collapse; font-size: 12.5px; }
+.camp-table th {
+  text-align: right; padding: 8px 10px; font-size: 10.5px; font-weight: 700;
+  color: var(--gray3); text-transform: uppercase; letter-spacing: .06em;
+  border-bottom: 2px solid var(--gray5); white-space: nowrap;
+}
+.camp-table th:first-child, .camp-table th:nth-child(2),
+.camp-table th:nth-child(3), .camp-table th:nth-child(4) { text-align: left; }
+.camp-table td {
+  padding: 10px 10px; border-bottom: 1px solid var(--gray5);
+  text-align: right; white-space: nowrap;
+}
+.camp-table td:first-child, .camp-table td:nth-child(2),
+.camp-table td:nth-child(3), .camp-table td:nth-child(4) { text-align: left; }
+.camp-table tr:last-child td { border-bottom: none; }
+.camp-table tr.totals-row td {
+  font-weight: 700; background: var(--gray6);
+  border-top: 2px solid var(--gray4); border-bottom: none;
+}
+.camp-badge {
+  display: inline-block; padding: 2px 8px; border-radius: 20px;
+  font-size: 11px; font-weight: 600;
+}
+.camp-funnel-bar {
+  display: flex; gap: 3px; align-items: center; justify-content: flex-end;
+}
+.camp-funnel-step {
+  display: flex; flex-direction: column; align-items: center;
+  font-size: 10px; color: var(--gray2);
+}
+.camp-funnel-num { font-size: 13px; font-weight: 700; color: var(--black); }
+.camp-funnel-arrow { color: var(--gray3); font-size: 11px; padding: 0 2px; }
+.kpi-band {
+  display: flex; gap: 16px; flex-wrap: wrap; padding: 16px 0 8px;
+}
+.kpi-band-item { display: flex; flex-direction: column; gap: 2px; }
+.kpi-band-label { font-size: 10.5px; color: var(--gray2); text-transform: uppercase; letter-spacing:.05em; }
+.kpi-band-val { font-size: 22px; font-weight: 800; letter-spacing: -0.03em; }
+.kpi-band-sub  { font-size: 11px; color: var(--gray2); }
+.breakdown-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 16px; margin-top: 16px; }
+@media (max-width: 900px) { .breakdown-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+
+<!-- ═══════ SIDEBAR ═══════ -->
+<aside class="sidebar">
+  <div class="sidebar-brand">
+    <div class="brand-icon">
+      <svg viewBox="0 0 20 20" fill="none" stroke="white" stroke-width="2" stroke-linecap="round">
+        <path d="M3 17L7 12L11 14.5L17 7"/>
+        <path d="M14 7h3v3"/>
+      </svg>
+    </div>
+    <div>
+      <div class="brand-name">PulseDash</div>
+      <div class="brand-sub">Marketing Dashboard</div>
+    </div>
+  </div>
+
+  <div class="sidebar-help">
+    <div class="help-title">Hey, Dutch! <span class="wave">👋</span></div>
+    <div class="help-sub">Your marketing overview</div>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Views</div>
+    <button class="nav-item active" data-tab="executive" onclick="switchTab('executive',this)">
+      <div class="nav-item-left">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <path d="M3 3h14v4H3zM3 9h6v8H3zM11 9h6v8h-6z"/>
+        </svg>
+        <span>Executive</span>
+      </div>
+      <span class="nav-dot"></span>
+    </button>
+    <button class="nav-item" data-tab="overview" onclick="switchTab('overview',this)">
+      <div class="nav-item-left">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <rect x="2" y="2" width="7" height="7" rx="1.5"/>
+          <rect x="11" y="2" width="7" height="7" rx="1.5"/>
+          <rect x="2" y="11" width="7" height="7" rx="1.5"/>
+          <rect x="11" y="11" width="7" height="7" rx="1.5"/>
+        </svg>
+        <span>Overview</span>
+      </div>
+    </button>
+    <button class="nav-item" data-tab="marketing" onclick="switchTab('marketing',this)">
+      <div class="nav-item-left">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <polyline points="3,15 7,9 11,12 17,5"/>
+          <line x1="3" y1="18" x2="17" y2="18"/>
+        </svg>
+        <span>Marketing</span>
+      </div>
+    </button>
+    <button class="nav-item" data-tab="campaigns" onclick="switchTab('campaigns',this)">
+      <div class="nav-item-left">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <path d="M3 5h14M3 10h9M3 15h6"/><circle cx="16" cy="13" r="3"/>
+        </svg>
+        <span>Campaigns</span>
+      </div>
+    </button>
+    <button class="nav-item" data-tab="ai" onclick="switchTab('ai',this)">
+      <div class="nav-item-left">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10 2l1.8 4.2L16 8l-4.2 1.8L10 14l-1.8-4.2L4 8l4.2-1.8z"/>
+          <path d="M15.5 13l.8 1.7 1.7.8-1.7.8-.8 1.7-.8-1.7-1.7-.8 1.7-.8z"/>
+        </svg>
+        <span>Ask AI</span>
+      </div>
+      <span style="font-size:9px;font-weight:700;color:var(--orange);background:var(--orange-light);padding:2px 6px;border-radius:6px;letter-spacing:.5px">NEW</span>
+    </button>
+    <button class="nav-item" data-tab="sales" onclick="switchTab('sales',this)">
+      <div class="nav-item-left">
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+          <path d="M10 3v14M5 8l5-5 5 5M5 17l5-5 5 5" opacity=".5"/>
+          <path d="M3 8h14M3 12h14"/>
+        </svg>
+        <span>Sales &amp; Pipeline</span>
+      </div>
+    </button>
+  </div>
+
+  <div class="nav-section">
+    <div class="nav-label">Brands</div>
+    <button class="nav-brand-item active" data-brand="rc" onclick="selectBrand('rc',this)">
+      <span class="nav-brand-dot" style="background:var(--rc-color)"></span>
+      <span>Remodeling Concepts</span>
+    </button>
+    <button class="nav-brand-item" data-brand="rnr" onclick="selectBrand('rnr',this)">
+      <span class="nav-brand-dot" style="background:var(--rnr-color)"></span>
+      <span>Ryann Reed</span>
+    </button>
+    <button class="nav-brand-item" data-brand="wl" onclick="selectBrand('wl',this)">
+      <span class="nav-brand-dot" style="background:var(--wl-color)"></span>
+      <span>Wood Lane Golf</span>
+    </button>
+    <button class="nav-brand-item" data-brand="both" onclick="selectBrand('both',this)">
+      <span class="nav-brand-dot" style="background:linear-gradient(135deg,var(--rc-color),var(--rnr-color))"></span>
+      <span>All Brands</span>
+    </button>
+  </div>
+
+  <div class="sidebar-footer">
+    <button class="settings-btn" onclick="toggleTheme()">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+        <circle cx="10" cy="10" r="3.5"/>
+        <path d="M10 2v2M10 16v2M2 10h2M16 10h2M4.22 4.22l1.42 1.42M14.36 14.36l1.42 1.42M4.22 15.78l1.42-1.42M14.36 5.64l1.42-1.42"/>
+      </svg>
+      <span>Appearance</span>
+    </button>
+  </div>
+</aside>
+
+<!-- ═══════ MAIN ═══════ -->
+<div class="main-wrapper">
+
+  <!-- Top header -->
+  <header class="top-header">
+    <div class="search-bar">
+      <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <circle cx="9" cy="9" r="6"/><path d="M15 15l3 3"/>
+      </svg>
+      <input type="text" placeholder="Search metrics, sources…"/>
+    </div>
+
+    <div class="header-right">
+      <div class="range-pills">
+        <button class="r-btn" onclick="setRange('7d',this)">7d</button>
+        <button class="r-btn active" onclick="setRange('30d',this)">30d</button>
+        <button class="r-btn" onclick="setRange('90d',this)">90d</button>
+      </div>
+      <div class="custom-date-wrap">
+        <input type="date" id="date-from"/>
+        <span style="color:var(--gray3)">→</span>
+        <input type="date" id="date-to" onchange="refreshCustomRange()"/>
+      </div>
+      <div class="date-chip">
+        <div>
+          <div class="date-day" id="hdr-day">8</div>
+        </div>
+        <div class="date-detail">
+          <div id="hdr-dow">Wed,</div>
+          <div id="hdr-month">April</div>
+        </div>
+        <div class="date-icon">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round">
+            <rect x="3" y="4" width="14" height="14" rx="2"/>
+            <line x1="3" y1="9" x2="17" y2="9"/>
+            <line x1="7" y1="2" x2="7" y2="6"/>
+            <line x1="13" y1="2" x2="13" y2="6"/>
+          </svg>
+        </div>
+      </div>
+      <div class="avatar-wrap" title="Dutch">D</div>
+    </div>
+  </header>
+
+  <!-- Content -->
+  <div class="content">
+    <div class="page-eyebrow">
+      <span id="eyebrow-brand">Home</span>
+      <span>›</span>
+      <span id="eyebrow-tab">Overview</span>
+    </div>
+    <div class="page-title" id="page-title">Marketing Overview</div>
+    <div class="page-sub">
+      <span id="page-sub-text">All channels · Last 30 days vs. prior period</span>
+      <span class="live-badge" id="live-badge" style="display:none">Live</span>
+    </div>
+
+    <!-- Tab panels -->
+    <div id="tab-executive" class="tab-panel"></div>
+    <div id="tab-overview"  class="tab-panel hidden"></div>
+    <div id="tab-marketing" class="tab-panel hidden"></div>
+    <div id="tab-campaigns" class="tab-panel hidden"></div>
+    <div id="tab-sales"     class="tab-panel hidden"></div>
+    <div id="tab-ai"        class="tab-panel hidden"></div>
+  </div>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+  <div class="modal-content" id="modal-content" onclick="event.stopPropagation()">
+    <button class="modal-close" onclick="closeModalDirect()">✕</button>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════
+// CONSTANTS + STATE
+// ══════════════════════════════════
+const BRAND_NAMES = {
+  rc:   'Remodeling Concepts',
+  rnr:  'Ryann Reed',
+  wl:   'Wood Lane Golf & Social',
+  both: 'All Brands'
+};
+const BRAND_COLORS = {
+  rc:   '#e07252',
+  rnr:  '#8b5cf6',
+  wl:   '#27ae60',
+  both: '#e07252'
+};
+
+let DATA = null;
+let currentBrand = 'rc';
+let currentTab   = 'executive';
+let sparkCharts  = {};
+let sparkCounter = 0;
+
+// ══════════════════════════════════
+// SAMPLE DATA (shown when no API)
+// ══════════════════════════════════
+const SAMPLE = {
+  rc: {
+    kpi: [
+      { label:'Website Visitors', value:'3,482', trend:'+12.4%', dir:'up',   spark:[210,195,320,280,410,395,470,388,502,480,521,558,491,603,572,614,588,642,710,695,681,720,740,711,758,802,788,841,862,820] },
+      { label:'Total Leads',      value:'87',    trend:'+8.2%',  dir:'up',   spark:[3,2,4,3,5,4,6,5,7,4,5,6,7,5,8,7,9,8,6,9,7,10,8,9,11,8,10,12,9,11] },
+      { label:'Ad Spend',         value:'$4,200',trend:'-3.1%',  dir:'down', spark:[130,145,120,160,140,155,142,158,162,148,155,170,165,160,172,168,180,172,165,175,168,178,182,175,185,180,176,190,188,195] },
+      { label:'Cost Per Lead',    value:'$48.28',trend:'-10.5%', dir:'up',   spark:[62,60,58,55,60,57,54,58,55,52,56,54,51,55,53,50,54,52,49,53,51,48,50,47,51,49,48,47,49,48] },
+    ],
+    web: {
+      sessions: { label:'Sessions', value:'3,482', trend:'+12.4%', dir:'up', spark:[210,195,320,280,410,395,470,388,502,480,521,558,491,603,572,614,588,642,710,695,681,720,740,711,758,802,788,841,862,820] },
+      users:    { label:'Users',    value:'2,841', trend:'+9.1%',  dir:'up'  },
+      bounce:   { label:'Bounce Rate', value:'48.2%', trend:'-4.3%', dir:'up' },
+      duration: { label:'Avg. Duration', value:'2m 14s', trend:'+6.2%', dir:'up' },
+    },
+    topPages: [
+      ['/kitchen-remodeling','842'],
+      ['/bathroom-remodeling','618'],
+      ['/home-additions','501'],
+      ['/ (Home)','408'],
+      ['/contact','297'],
+    ],
+    traffic: [
+      { name:'Organic', val:'1,820', color:'#27ae60' },
+      { name:'Paid',    val:'892',   color:'#e07252' },
+      { name:'Direct',  val:'481',   color:'#3498db' },
+      { name:'Referral',val:'289',   color:'#8b5cf6' },
+    ],
+    yt: {
+      subscribers: { label:'Subscribers', value:'19',     trend:'+2', dir:'up' },
+      views:       { label:'Views',        value:'67,657', trend:'+5.8%', dir:'up' },
+      watchTime:   { label:'Watch Time',   value:'3,241h', trend:'+9.2%', dir:'up' },
+    },
+    ytVideos: [
+      ['Kitchen Remodel Before & After','8,421 views','12:34'],
+      ['Bathroom Transformation Tour','6,182 views','9:18'],
+      ['Home Addition Time-lapse','5,490 views','7:42'],
+      ['Top 5 Remodeling Mistakes','4,823 views','11:05'],
+      ['Client Testimonial — Kitchen','3,651 views','5:28'],
+    ],
+    email: {
+      openRate: { label:'Open Rate', value:'34.5%', trend:'+2.1%', dir:'up' },
+      sends:    { label:'Sends',     value:'42,984', trend:'+1,200', dir:'up' },
+      clicks:   { label:'Click Rate',value:'6.8%',  trend:'+0.4%', dir:'up' },
+      unsubs:   { label:'Unsubs',    value:'0.21%', trend:'-0.02%', dir:'up' },
+    },
+    ig: null,
+    gads: {
+      spend:      { label:'Spend',      value:'$3,840', trend:'-2.1%', dir:'down' },
+      clicks:     { label:'Clicks',     value:'2,841',  trend:'+11.2%', dir:'up' },
+      ctr:        { label:'CTR',        value:'4.2%',   trend:'+0.8%', dir:'up' },
+      conversions:{ label:'Conversions',value:'64',     trend:'+14.3%', dir:'up' },
+    },
+    meta: null,
+    forms: { total: 87 },
+    formsKpi: [
+      { label:'Total Submissions', value:'87',  trend:'+8.2%', dir:'up' },
+      { label:'Contact Forms',     value:'53',  trend:'+6.1%', dir:'up' },
+      { label:'Estimate Requests', value:'34',  trend:'+12.3%', dir:'up' },
+    ],
+    formsRows: [
+      ['Contact Form','53','organic','14.2%','+6.1%'],
+      ['Estimate Request','34','paid','9.8%','+12.3%'],
+    ],
+    jobtread: {
+      pipeline: [
+        { name:'Lead / Estimate',color:'#e07252', count: 12 },
+        { name:'Contract Signed',color:'#3498db', count: 8  },
+        { name:'In Progress',    color:'#f39c12', count: 5  },
+        { name:'Punch List',     color:'#8b5cf6', count: 3  },
+        { name:'Completed',      color:'#27ae60', count: 23 },
+        { name:'Lost / Closed',  color:'#95a5a6', count: 4  },
+      ],
+      metrics: {
+        total:  { label:'Total Jobs',   value:'55', trend:'+7', dir:'up' },
+        active: { label:'Active Jobs',  value:'16', trend:'+2', dir:'up' },
+        pipeline_val: { label:'Pipeline Value', value:'$127,500', trend:'+$18k', dir:'up' },
+      }
+    },
+    campaigns: {
+      last_updated: 'Sample data',
+      totals: { spend:'$3,392', impressions:'128,685', leads:88, appts:0, proposals:0, jobs:0, revenue:'$0', cpl:'$38.54', close_rate:'—', roas:'—' },
+      rows: [
+        { name:'March Siding – Cold – Quality Test – 2026', service:'Siding',  geo:'New Jersey',   channel:'Meta Ads', spend:551.16,  impressions:15898, leads:10, appts:0, proposals:0, jobs:0, revenue:0, cpl:55.12, cpa:null, close_rate:null, roas:null },
+        { name:'March Siding – Cold – Quality Test – 2026', service:'Siding',  geo:'Pennsylvania', channel:'Meta Ads', spend:1772.54, impressions:46588, leads:26, appts:0, proposals:0, jobs:0, revenue:0, cpl:68.17, cpa:null, close_rate:null, roas:null },
+        { name:'March Siding – Cold – Quality Test – 2026', service:'Siding',  geo:'Delaware',     channel:'Meta Ads', spend:2.49,    impressions:34,    leads:0,  appts:0, proposals:0, jobs:0, revenue:0, cpl:null,  cpa:null, close_rate:null, roas:null },
+        { name:"February '26 Roofing Campaign",             service:'Roofing', geo:'Pennsylvania', channel:'Meta Ads', spend:1049.39, impressions:64950, leads:51, appts:0, proposals:0, jobs:0, revenue:0, cpl:20.58, cpa:null, close_rate:null, roas:null },
+        { name:"February '26 Roofing Campaign",             service:'Roofing', geo:'New Jersey',   channel:'Meta Ads', spend:15.51,   impressions:1135,  leads:1,  appts:0, proposals:0, jobs:0, revenue:0, cpl:15.51, cpa:null, close_rate:null, roas:null },
+        { name:"February '26 Roofing Campaign",             service:'Roofing', geo:'Delaware',     channel:'Meta Ads', spend:0.81,    impressions:80,    leads:0,  appts:0, proposals:0, jobs:0, revenue:0, cpl:null,  cpa:null, close_rate:null, roas:null },
+      ],
+      by_service: [
+        { name:'Siding',  spend:'$2,326', leads:36, appts:0, jobs:0, revenue:'$0', cpl:'$64.62', close_rate:'—', roas:'—' },
+        { name:'Roofing', spend:'$1,066', leads:52, appts:0, jobs:0, revenue:'$0', cpl:'$20.49', close_rate:'—', roas:'—' },
+      ],
+      by_channel: [
+        { name:'Meta Ads', spend:'$3,392', leads:88, appts:0, jobs:0, revenue:'$0', cpl:'$38.54', close_rate:'—', roas:'—' },
+      ],
+      by_geo: [
+        { name:'Pennsylvania', spend:'$2,822', leads:77, appts:0, jobs:0, revenue:'$0', cpl:'$36.65', close_rate:'—', roas:'—' },
+        { name:'New Jersey',   spend:'$567',   leads:11, appts:0, jobs:0, revenue:'$0', cpl:'$51.54', close_rate:'—', roas:'—' },
+        { name:'Delaware',     spend:'$3',     leads:0,  appts:0, jobs:0, revenue:'$0', cpl:'—',      close_rate:'—', roas:'—' },
+      ],
+    },
+  },
+  rnr: {
+    kpi: [
+      { label:'Website Visitors', value:'8,214', trend:'+22.1%', dir:'up',  spark:[400,420,480,390,510,555,490,600,580,640,610,680,720,695,750,780,810,845,820,870,910,885,930,960,940,990,1020,980,1050,1070] },
+      { label:'Total Leads',      value:'142',   trend:'+18.5%', dir:'up',  spark:[4,5,6,5,7,6,8,9,8,10,9,11,10,12,11,13,12,14,13,15,14,16,15,17,16,18,17,19,18,20] },
+      { label:'Ad Spend',         value:'$6,800',trend:'+5.2%',  dir:'down',spark:[180,190,200,185,210,220,205,225,215,230,225,240,250,245,255,260,270,265,275,280,290,285,295,300,310,305,315,320,330,325] },
+      { label:'Cost Per Lead',    value:'$47.89',trend:'-9.8%',  dir:'up',  spark:[68,66,64,62,60,58,56,54,52,54,52,50,52,50,48,50,48,46,48,46,48,46,48,50,46,48,50,48,49,48] },
+    ],
+    web: { sessions: { label:'Sessions', value:'8,214', trend:'+22.1%', dir:'up', spark:[400,420,480,390,510,555,490,600,580,640,610,680,720,695,750,780,810,845,820,870,910,885,930,960,940,990,1020,980,1050,1070] } },
+    yt: {
+      subscribers: { label:'Subscribers', value:'4,210', trend:'+380', dir:'up' },
+      views:       { label:'Views',        value:'182,440', trend:'+12.4%', dir:'up' },
+    },
+    email: {
+      openRate: { label:'Open Rate', value:'41.2%', trend:'+3.1%', dir:'up' },
+      sends:    { label:'Sends',     value:'18,200', trend:'+2,400', dir:'up' },
+    },
+    forms: { total: 142 },
+    formsKpi: [{ label:'Total Submissions', value:'142', trend:'+18.5%', dir:'up' }],
+    jobtread: null, ig: null, gads: null, meta: null, campaigns: null,
+  },
+  wl: {
+    kpi: [
+      { label:'Website Visitors', value:'2,108', trend:'+6.4%', dir:'up', spark:[60,70,65,80,75,90,85,100,95,110,105,100,115,110,120,115,125,120,130,125,135,130,140,135,145,140,150,145,155,150] },
+      { label:'Total Leads',      value:'38',   trend:'+4.1%',  dir:'up', spark:[1,2,1,2,1,3,2,3,2,3,2,4,3,4,3,4,3,4,3,5,4,5,4,5,4,5,4,5,4,5] },
+      { label:'Ad Spend',         value:'$1,200',trend:'+2.0%', dir:'down',spark:[35,40,38,42,40,45,43,48,46,50,48,52,50,55,53,58,56,60,58,62,60,64,62,66,64,68,66,70,68,72] },
+      { label:'Cost Per Lead',    value:'$31.58',trend:'-2.2%', dir:'up', spark:[38,37,36,35,34,33,35,34,33,32,34,33,32,31,33,32,31,30,32,31,30,32,31,30,32,31,32,31,33,32] },
+    ],
+    email: {
+      openRate: { label:'Open Rate', value:'29.4%', trend:'+1.2%', dir:'up' },
+      sends:    { label:'Sends',     value:'5,800', trend:'+200', dir:'up' },
+    },
+    forms: { total: 38 },
+    formsKpi: [{ label:'Total Submissions', value:'38', trend:'+4.1%', dir:'up' }],
+    yt: null, ig: null, gads: null, meta: null, jobtread: null,
+  }
+};
+
+// ══════════════════════════════════
+// HELPERS
+// ══════════════════════════════════
+function uid() { return 'sp' + (++sparkCounter); }
+
+function getBrandColor(b) { return BRAND_COLORS[b] || BRAND_COLORS.rc; }
+
+function trendIcon(dir) { return dir === 'up' ? '↑' : dir === 'down' ? '↓' : '→'; }
+
+function trendClass(dir, invertMeaning) {
+  if (invertMeaning) {
+    if (dir === 'up') return 'down';
+    if (dir === 'down') return 'up';
+  }
+  if (dir === 'up') return 'up';
+  if (dir === 'down') return 'down';
+  return 'flat';
+}
+
+function hasError(d) { return !d || (d && d._error); }
+
+function normMetrics(d) {
+  if (!d) return [];
+  if (Array.isArray(d)) return d;
+  if (typeof d === 'object' && !d._error) {
+    return Object.entries(d)
+      .filter(([k,v]) => !['_error','pipeline','metrics','rows','kpi','total'].includes(k) && v && typeof v === 'object' && v.value !== undefined)
+      .map(([k,v]) => ({ label: v.label || k, value: v.value, trend: v.trend||'', dir: v.dir||'neutral', spark: v.spark||[] }));
+  }
+  return [];
+}
+
+function getKpi(kpi, ...labels) {
+  for (const label of labels) {
+    const found = kpi.find(k => k.label && k.label.toLowerCase().includes(label.toLowerCase()));
+    if (found) return found;
+  }
+  return {};
+}
+
+// ══════════════════════════════════
+// SPARKLINES
+// ══════════════════════════════════
+function createSparkline(canvasId, data, color) {
+  if (!data || !data.length) return;
+  if (sparkCharts[canvasId]) sparkCharts[canvasId].destroy();
+  const ctx = document.getElementById(canvasId);
+  if (!ctx) return;
+  sparkCharts[canvasId] = new Chart(ctx, {
+    type: 'line',
+    data: {
+      labels: data.map((_,i)=>i),
+      datasets: [{
+        data,
+        borderColor: color,
+        borderWidth: 2,
+        pointRadius: 0,
+        fill: true,
+        backgroundColor: (c => {
+          const g = c.getContext('2d').createLinearGradient(0,0,0,70);
+          g.addColorStop(0, color+'45');
+          g.addColorStop(1, color+'00');
+          return g;
+        })(ctx),
+        tension: 0.4,
+      }]
+    },
+    options: {
+      responsive: false,
+      animation: { duration: 600 },
+      plugins: { legend: { display:false }, tooltip: { enabled:false } },
+      scales: { x: { display:false }, y: { display:false } },
+    }
+  });
+}
+
+function flushSparklines() {
+  document.querySelectorAll('[data-spark-id]').forEach(el => {
+    const id  = el.dataset.sparkId;
+    const col = el.dataset.sparkColor;
+    const vals = (el.dataset.sparkVals||'').split(',').map(Number).filter(n=>!isNaN(n));
+    if (vals.length) setTimeout(() => createSparkline(id, vals, col), 80);
+    el.remove();
+  });
+}
+
+// ══════════════════════════════════
+// DOT MATRIX BUILDER
+// ══════════════════════════════════
+function buildDotMatrix(cols, rows, filledCount, color) {
+  const total = cols * rows;
+  const dots = [];
+  for (let i = 0; i < total; i++) {
+    const col = i < filledCount ? 'active' : (i < filledCount + Math.floor(filledCount * 0.3) ? 'active-light' : '');
+    dots.push(`<div class="dot ${col}" style="${col ? 'background:' + color : ''}"></div>`);
+  }
+  return `<div class="dot-matrix" style="grid-template-columns:repeat(${cols},1fr)">${dots.join('')}</div>`;
+}
+
+// ══════════════════════════════════
+// CARD BUILDERS
+// ══════════════════════════════════
+function kpiCard(opts) {
+  const sid = opts.spark ? uid() : null;
+  const sparkEl = sid
+    ? `<canvas class="spark-canvas" id="${sid}" width="220" height="70"></canvas>`
+    : '';
+  const sparkData = sid
+    ? `<span data-spark-id="${sid}" data-spark-color="${opts.color||'#e07252'}" data-spark-vals="${opts.spark.join(',')}"></span>`
+    : '';
+
+  return `
+  <div class="card ${opts.colClass||'col-4'}">
+    <div class="card-hd">
+      <div>
+        <div class="card-label">${opts.label}</div>
+        ${opts.sub ? `<div class="card-sub">${opts.sub}</div>` : ''}
+      </div>
+      ${opts.icon ? `<div class="card-icon-wrap ${opts.iconClass||'ci-orange'}">${opts.icon}</div>` : ''}
+    </div>
+    <div class="card-number ${opts.numSize||''}">${opts.value||'—'}</div>
+    ${opts.trend ? `<div class="trend-pill ${trendClass(opts.dir)}">${trendIcon(opts.dir)} ${opts.trend}</div>` : ''}
+    ${sparkEl}
+    ${sparkData}
+  </div>`;
+}
+
+function statCard(opts) {
+  const rows = (opts.rows||[]).map(r =>
+    `<div class="stat-row">
+      <span class="stat-name">${r.label}</span>
+      <span class="stat-val">${r.value}</span>
+    </div>`
+  ).join('');
+  return `
+  <div class="card ${opts.colClass||'col-4'}">
+    <div class="card-hd">
+      <div>
+        <div class="card-label">${opts.label}</div>
+        ${opts.sub ? `<div class="card-sub">${opts.sub}</div>` : ''}
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        ${opts.viewMore ? `<button class="view-more" onclick="${opts.viewMore}">View more →</button>` : ''}
+        ${opts.icon ? `<div class="card-icon-wrap ${opts.iconClass||'ci-gray'}">${opts.icon}</div>` : ''}
+      </div>
+    </div>
+    ${rows || '<div class="not-configured">Not configured</div>'}
+  </div>`;
+}
+
+// ══════════════════════════════════
+// EXECUTIVE TAB
+// ══════════════════════════════════
+function renderExecutive(brand) {
+  const container = document.getElementById('tab-executive');
+  if (brand === 'both') {
+    let html = '';
+    ['rc','rnr','wl'].forEach(b => {
+      const d = DATA[b];
+      if (!d || d._error) return;
+      html += `<div style="margin-bottom:8px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+          <span style="width:10px;height:10px;border-radius:50%;background:${getBrandColor(b)}"></span>
+          <span style="font-size:14px;font-weight:700">${BRAND_NAMES[b]}</span>
+        </div>`;
+      html += buildExecutiveGrid(d, b);
+      html += '</div>';
+    });
+    container.innerHTML = html;
+  } else {
+    const d = DATA[brand];
+    if (!d) { container.innerHTML = ''; return; }
+    container.innerHTML = buildExecutiveGrid(d, brand);
+  }
+  flushSparklines();
+}
+
+function buildExecutiveGrid(d, brand) {
+  const color = getBrandColor(brand);
+  const kpi = d.kpi || [];
+  const exec = d.executive || {};
+
+  // Build hero KPIs from executive data or fall back to kpi array
+  const heroItems = [];
+  if (exec.revenue_closed) {
+    heroItems.push({ label:'Revenue Closed', value:exec.revenue_closed.value, trend:exec.revenue_closed.trend, dir:exec.revenue_closed.dir, spark:exec.revenue_closed.spark });
+  } else {
+    const jt = d.jobtread;
+    const jtM = (!hasError(jt) && jt) ? normMetrics(jt.metrics || {}) : [];
+    const pVal = jtM.find(m=>m.label.toLowerCase().includes('value'));
+    if (pVal) heroItems.push({ label:'Pipeline Value', value:pVal.value, trend:pVal.trend, dir:pVal.dir });
+  }
+
+  if (exec.pipeline_value) {
+    heroItems.push({ label:'Pipeline Value', value:exec.pipeline_value.value, trend:exec.pipeline_value.trend, dir:exec.pipeline_value.dir, spark:exec.pipeline_value.spark });
+  }
+
+  if (exec.total_leads) {
+    heroItems.push({ label:'Total Leads', value:exec.total_leads.value, trend:exec.total_leads.trend, dir:exec.total_leads.dir, spark:exec.total_leads.spark });
+  } else {
+    const leads = getKpi(kpi, 'lead', 'conversion');
+    if (leads.value) heroItems.push({ label:'Total Leads', value:leads.value, trend:leads.trend, dir:leads.dir, spark:leads.spark });
+  }
+
+  if (exec.cost_per_lead) {
+    heroItems.push({ label:'Cost Per Lead', value:exec.cost_per_lead.value, trend:exec.cost_per_lead.trend, dir:exec.cost_per_lead.dir, spark:exec.cost_per_lead.spark });
+  } else {
+    const cpl = getKpi(kpi, 'cpl', 'cost per');
+    if (cpl.value) heroItems.push({ label:'Cost Per Lead', value:cpl.value, trend:cpl.trend, dir:cpl.dir, spark:cpl.spark });
+  }
+
+  if (exec.win_rate) {
+    heroItems.push({ label:'Win Rate', value:exec.win_rate.value, trend:exec.win_rate.trend, dir:exec.win_rate.dir, spark:exec.win_rate.spark });
+  }
+
+  if (exec.appointments) {
+    heroItems.push({ label:'Appointments', value:exec.appointments.value, trend:exec.appointments.trend, dir:exec.appointments.dir, spark:exec.appointments.spark });
+  }
+
+  // Fallback: fill from KPI array if we have fewer than 4 items
+  if (heroItems.length < 4) {
+    const visitors = getKpi(kpi, 'visitor', 'session');
+    if (visitors.value && !heroItems.find(h=>h.label.toLowerCase().includes('visitor'))) {
+      heroItems.unshift({ label:'Website Visitors', value:visitors.value, trend:visitors.trend, dir:visitors.dir, spark:visitors.spark });
+    }
+    const spend = getKpi(kpi, 'spend', 'cost');
+    if (spend.value && !heroItems.find(h=>h.label.toLowerCase().includes('spend'))) {
+      heroItems.push({ label:'Ad Spend', value:spend.value, trend:spend.trend, dir:spend.dir, spark:spend.spark });
+    }
+    const forms = d.formsKpi && d.formsKpi[0];
+    if (forms && forms.value && !heroItems.find(h=>h.label.toLowerCase().includes('form'))) {
+      heroItems.push({ label:'Form Submissions', value:forms.value, trend:forms.trend, dir:forms.dir });
+    }
+  }
+
+  let html = '<div class="exec-hero-grid">';
+  heroItems.slice(0, 6).forEach(item => {
+    const sid = item.spark && item.spark.length ? uid() : null;
+    html += `<div class="card" style="min-height:120px">
+      <div class="card-hd"><div class="card-label">${item.label}</div></div>
+      <div class="card-number med">${item.value || '—'}</div>
+      ${item.trend ? `<div class="trend-pill ${trendClass(item.dir)}">${trendIcon(item.dir)} ${item.trend}</div>` : ''}
+      ${sid ? `<canvas class="spark-canvas" id="${sid}" width="180" height="60"></canvas><span data-spark-id="${sid}" data-spark-color="${color}" data-spark-vals="${item.spark.join(',')}"></span>` : ''}
+    </div>`;
+  });
+  html += '</div>';
+
+  // Funnel + Lead Sources row
+  html += '<div class="dash-grid">';
+
+  // Sales Funnel
+  const jt = d.jobtread;
+  const salesPipe = (!hasError(jt) && jt) ? (jt.sales_pipeline || jt.pipeline || []) : [];
+  const funnelStages = salesPipe.filter(p => p.count > 0);
+  const maxFunnel = Math.max(...funnelStages.map(p=>p.count), 1);
+
+  if (funnelStages.length) {
+    html += `<div class="card col-6">
+      <div class="card-hd">
+        <div><div class="card-label">Sales Funnel</div><div class="card-sub">Active stages — JobTread</div></div>
+      </div>
+      ${funnelStages.map(p => `
+        <div class="pipe-row">
+          <span class="pipe-label">${p.name}</span>
+          <div class="pipe-track"><div class="pipe-fill" style="width:${Math.round(p.count/maxFunnel*100)}%;background:${p.color}"></div></div>
+          <span class="pipe-count">${p.count}</span>
+        </div>`).join('')}
+    </div>`;
+  } else {
+    html += `<div class="card col-6">
+      <div class="card-hd"><div class="card-label">Sales Funnel</div></div>
+      <div class="not-configured">No pipeline data</div>
+    </div>`;
+  }
+
+  // Lead Sources
+  const traffic = d.traffic || [];
+  if (traffic.length) {
+    const maxTraffic = Math.max(...traffic.map(t => parseInt(String(t.val||t.value||'0').replace(/[^0-9]/g,''))), 1);
+    html += `<div class="card col-6">
+      <div class="card-hd">
+        <div><div class="card-label">Lead Sources</div><div class="card-sub">Traffic by channel</div></div>
+      </div>
+      ${traffic.map(t => {
+        const numVal = parseInt(String(t.val||t.value||'0').replace(/[^0-9]/g,'')) || 0;
+        return `<div class="pipe-row">
+          <span class="pipe-label">${t.name}</span>
+          <div class="pipe-track"><div class="pipe-fill" style="width:${Math.round(numVal/maxTraffic*100)}%;background:${t.color||color}"></div></div>
+          <span class="pipe-count">${t.val||t.value||'—'}</span>
+        </div>`;
+      }).join('')}
+    </div>`;
+  } else {
+    html += `<div class="card col-6">
+      <div class="card-hd"><div class="card-label">Lead Sources</div></div>
+      <div class="not-configured">No traffic data</div>
+    </div>`;
+  }
+
+  html += '</div>';
+  return html;
+}
+
+// ══════════════════════════════════
+// OVERVIEW TAB
+// ══════════════════════════════════
+function renderOverview(brand) {
+  const container = document.getElementById('tab-overview');
+  if (brand === 'both') {
+    container.innerHTML = ['rc','rnr','wl'].map(b => {
+      const d = DATA[b];
+      if (!d) return '';
+      return `<div style="margin-bottom:32px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+          <span style="width:10px;height:10px;border-radius:50%;background:${getBrandColor(b)}"></span>
+          <span style="font-size:15px;font-weight:700">${BRAND_NAMES[b]}</span>
+        </div>
+        ${buildOverviewGrid(d, b)}
+      </div>`;
+    }).join('');
+  } else {
+    const d = DATA[brand];
+    if (!d) { container.innerHTML = '<div class="not-configured" style="min-height:200px">No data for this brand</div>'; return; }
+    container.innerHTML = buildOverviewGrid(d, brand);
+  }
+  flushSparklines();
+}
+
+function buildOverviewGrid(d, brand) {
+  const color = getBrandColor(brand);
+  const kpi   = d.kpi || [];
+
+  const visitors = getKpi(kpi, 'visitor', 'session', 'user', '');
+  const leads    = getKpi(kpi, 'lead', 'conversion');
+  const spend    = getKpi(kpi, 'spend', 'cost');
+  const cpl      = getKpi(kpi, 'cpl', 'cost per');
+  const spark    = (visitors.spark || []);
+
+  // YouTube
+  const ytM    = !hasError(d.yt) ? normMetrics(d.yt) : [];
+  const ytSubs = ytM.find(m=>m.label.toLowerCase().includes('sub'));
+  const ytViews= ytM.find(m=>m.label.toLowerCase().includes('view'));
+
+  // Email
+  const emailM  = !hasError(d.email) ? normMetrics(d.email) : [];
+  const emailOr = emailM.find(m=>m.label.toLowerCase().includes('open'));
+  const emailSd = emailM.find(m=>m.label.toLowerCase().includes('send') || m.label.toLowerCase().includes('sent'));
+
+  // Forms
+  const fkpi  = d.formsKpi || [];
+  const fTotal = fkpi[0] || (d.forms ? { value: d.forms.total || '—' } : { value:'—' });
+
+  // Pipeline
+  const jt = d.jobtread;
+  const jtPipe = (!hasError(jt) && jt) ? (jt.sales_pipeline || jt.pipeline || []) : [];
+  const jtMetrics = (!hasError(jt) && jt) ? normMetrics(jt.metrics || {}) : [];
+
+  // Exclude "Sold" from scale — it's a lifetime cumulative, not an active stage
+  const soldItem   = jtPipe.find(p => p.name.toLowerCase() === 'sold');
+  const activePipe = jtPipe.filter(p => p.name.toLowerCase() !== 'sold' && p.count > 0);
+  const maxPipe    = Math.max(...activePipe.map(p=>p.count), 1);
+
+  // Dot matrix: represent activity (30 days = 5 rows × 7 cols)
+  const visitorNum = parseInt(String(visitors.value||'0').replace(/[^0-9]/g,'')) || 0;
+  const dotFilled  = Math.min(Math.round(visitorNum / 200), 28);
+
+  let html = '<div class="dash-grid">';
+
+  // ── Website Visitors (large, col-5 with sparkline)
+  html += kpiCard({
+    colClass: 'col-5', label: 'Website Visitors', sub: 'Google Analytics 4',
+    value: visitors.value || '—', trend: visitors.trend, dir: visitors.dir,
+    spark: spark, color: color,
+    icon: '🌐', iconClass: 'ci-blue',
+  });
+
+  // ── Activity dot matrix (col-4)
+  html += `
+  <div class="card col-4">
+    <div class="card-hd">
+      <div>
+        <div class="card-label">30-Day Activity</div>
+        <div class="card-sub">Daily sessions</div>
+      </div>
+      <div style="font-size:11px;color:var(--gray2)">Weekly ↓</div>
+    </div>
+    <div style="margin-top:8px">
+      ${buildDotMatrix(10, 3, dotFilled, color)}
+    </div>
+    <div style="margin-top:12px;font-size:12px;color:var(--gray2)">
+      <span style="display:inline-flex;align-items:center;gap:4px"><span style="width:8px;height:8px;border-radius:50%;background:${color};display:inline-block"></span> Active days</span>
+    </div>
+  </div>`;
+
+  // ── Total Leads (col-3)
+  html += kpiCard({
+    colClass: 'col-3', label: 'Total Leads', value: leads.value || '—',
+    trend: leads.trend, dir: leads.dir,
+    icon: '🎯', iconClass: 'ci-orange',
+  });
+
+  // ── Ad Spend (col-3)
+  html += kpiCard({
+    colClass: 'col-3', label: 'Ad Spend', numSize: 'med',
+    value: spend.value || '—', trend: spend.trend, dir: spend.dir,
+    icon: '💰', iconClass: 'ci-gray',
+  });
+
+  // ── Cost Per Lead (col-3)
+  html += kpiCard({
+    colClass: 'col-3', label: 'Cost Per Lead', numSize: 'med',
+    value: cpl.value || '—', trend: cpl.trend, dir: cpl.dir,
+    icon: '📉', iconClass: 'ci-gray',
+  });
+
+  // ── Form Submissions (col-3)
+  html += kpiCard({
+    colClass: 'col-3', label: 'Form Submissions', numSize: 'med',
+    value: fTotal.value || '—', trend: fTotal.trend, dir: fTotal.dir,
+    icon: '📋', iconClass: 'ci-orange',
+  });
+
+  // ── YouTube + Email (col-3 each)
+  html += statCard({
+    colClass: 'col-3', label: 'YouTube', sub: 'Channel',
+    icon: '▶', iconClass: 'ci-gray',
+    viewMore: `openYouTubeModal('${brand}')`,
+    rows: d.yt && !hasError(d.yt) ? [
+      { label:'Subscribers', value: ytSubs  ? ytSubs.value  : '—' },
+      { label:'Views',       value: ytViews ? ytViews.value : '—' },
+    ] : [],
+  });
+
+  html += statCard({
+    colClass: 'col-3', label: 'Email', sub: 'Constant Contact',
+    icon: '✉', iconClass: 'ci-green',
+    rows: d.email && !hasError(d.email) ? [
+      { label:'Open Rate', value: emailOr ? emailOr.value : '—' },
+      { label:'Sends',     value: emailSd ? emailSd.value : '—' },
+    ] : [],
+  });
+
+  // ── Pipeline (col-12)
+  if (jtPipe.length) {
+    const jmV = jtMetrics.find(m=>m.label.toLowerCase().includes('value'));
+    const jmA = jtMetrics.find(m=>m.label.toLowerCase().includes('active'));
+    const jmT = jtMetrics.find(m=>m.label.toLowerCase().includes('total'));
+
+    html += `
+    <div class="card col-12">
+      <div class="card-hd">
+        <div>
+          <div class="card-label">JobTread Pipeline</div>
+          <div class="card-sub">Status buckets — all active jobs</div>
+        </div>
+        <div style="display:flex;gap:20px;flex-wrap:wrap">
+          ${jmT ? `<div><div style="font-size:11px;color:var(--gray2)">Total Jobs</div><div style="font-size:20px;font-weight:800;letter-spacing:-0.03em">${jmT.value}</div></div>` : ''}
+          ${jmA ? `<div><div style="font-size:11px;color:var(--gray2)">Active</div><div style="font-size:20px;font-weight:800;letter-spacing:-0.03em">${jmA.value}</div></div>` : ''}
+          ${soldItem ? `<div><div style="font-size:11px;color:var(--gray2)">Sold (All Time)</div><div style="font-size:20px;font-weight:800;letter-spacing:-0.03em;color:#16a34a">${soldItem.count}</div></div>` : ''}
+          ${jmV ? `<div><div style="font-size:11px;color:var(--gray2)">Pipeline Value</div><div style="font-size:20px;font-weight:800;letter-spacing:-0.03em;color:var(--orange)">${jmV.value}</div></div>` : ''}
+        </div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:0 40px;margin-top:8px">
+        ${activePipe.length ? activePipe.map(p => `
+          <div class="pipe-row">
+            <span class="pipe-label">${p.name}</span>
+            <div class="pipe-track"><div class="pipe-fill" style="width:${Math.round(p.count/maxPipe*100)}%;background:${p.color}"></div></div>
+            <span class="pipe-count">${p.count}</span>
+          </div>`).join('') : `<div style="grid-column:1/-1;font-size:13px;color:var(--gray2);padding:12px 0">No active jobs in pipeline</div>`}
+      </div>
+    </div>`;
+  }
+
+  html += '</div>';
+  return html;
+}
+
+// ══════════════════════════════════
+// MARKETING TAB
+// ══════════════════════════════════
+function renderMarketing(brand) {
+  const container = document.getElementById('tab-marketing');
+  if (brand === 'both') {
+    container.innerHTML = ['rc','rnr','wl'].map(b => {
+      const d = DATA[b]; if (!d) return '';
+      return `<div style="margin-bottom:32px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+          <span style="width:10px;height:10px;border-radius:50%;background:${getBrandColor(b)}"></span>
+          <span style="font-size:15px;font-weight:700">${BRAND_NAMES[b]}</span>
+        </div>${buildMarketingGrid(d, b)}</div>`;
+    }).join('');
+  } else {
+    const d = DATA[brand]; if (!d) { container.innerHTML = ''; return; }
+    container.innerHTML = buildMarketingGrid(d, brand);
+  }
+  flushSparklines();
+}
+
+function buildMarketingGrid(d, brand) {
+  const color = getBrandColor(brand);
+  let html = '<div class="dash-grid">';
+
+  // Website card
+  const webM = normMetrics(d.web);
+  if (webM.length) {
+    const sid = uid();
+    const wSpark = (webM[0] && webM[0].spark) || [];
+    html += `
+    <div class="card col-6">
+      <div class="card-hd">
+        <div><div class="card-label">Website</div><div class="card-sub">Google Analytics 4</div></div>
+        <div class="card-icon-wrap ci-blue">🌐</div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:16px">
+        ${webM.slice(0,4).map(m=>`
+          <div>
+            <div style="font-size:11px;color:var(--gray2);margin-bottom:2px">${m.label}</div>
+            <div style="font-size:20px;font-weight:800;letter-spacing:-0.03em">${m.value}</div>
+            ${m.trend ? `<div class="trend-pill ${trendClass(m.dir)}" style="margin-top:4px;font-size:10.5px">${trendIcon(m.dir)} ${m.trend}</div>` : ''}
+          </div>`).join('')}
+      </div>
+      ${d.traffic && d.traffic.length ? `
+        <div style="font-size:11px;color:var(--gray2);margin-bottom:8px;text-transform:uppercase;letter-spacing:.06em;font-weight:700">Traffic Sources</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px">
+          ${d.traffic.map(s=>`
+            <div class="traffic-chip">
+              <span style="width:6px;height:6px;border-radius:50%;background:${s.color||color};display:inline-block"></span>
+              <span style="font-size:12px;color:var(--gray1)">${s.name}</span>
+              <span style="font-size:12px;font-weight:700;color:var(--black)">${s.val||s.value||'—'}</span>
+            </div>`).join('')}
+        </div>` : ''}
+      ${d.newVsReturning ? `
+        <div style="font-size:11px;color:var(--gray2);margin-bottom:8px;margin-top:14px;text-transform:uppercase;letter-spacing:.06em;font-weight:700">New vs Returning</div>
+        <div class="stat-row"><span class="stat-name">New Visitors</span><span class="stat-val">${d.newVsReturning.new||'—'}</span></div>
+        <div class="stat-row"><span class="stat-name">Returning Visitors</span><span class="stat-val">${d.newVsReturning.returning||'—'}</span></div>
+      ` : ''}
+      ${wSpark.length ? `<canvas class="spark-canvas" id="${sid}" width="280" height="70" style="opacity:.25"></canvas><span data-spark-id="${sid}" data-spark-color="${color}" data-spark-vals="${wSpark.join(',')}"></span>` : ''}
+    </div>`;
+  } else {
+    html += `<div class="card col-6"><div class="card-hd"><div class="card-label">Website</div><div class="card-icon-wrap ci-blue">🌐</div></div><div class="not-configured">Not configured</div></div>`;
+  }
+
+  // YouTube card
+  const ytM = !hasError(d.yt) ? normMetrics(d.yt) : [];
+  html += `
+  <div class="card col-6">
+    <div class="card-hd">
+      <div><div class="card-label">YouTube</div><div class="card-sub">Channel performance</div></div>
+      <div style="display:flex;align-items:center;gap:8px">
+        ${d.yt && !hasError(d.yt) ? `<button class="view-more" onclick="openYouTubeModal('${brand}')">View all →</button>` : ''}
+        <div class="card-icon-wrap" style="background:rgba(239,68,68,.1);color:#ef4444">▶</div>
+      </div>
+    </div>
+    ${ytM.length ? `
+      <div style="display:flex;gap:20px;flex-wrap:wrap;margin-bottom:14px">
+        ${ytM.map(m=>`<div>
+          <div style="font-size:11px;color:var(--gray2)">${m.label}</div>
+          <div style="font-size:22px;font-weight:800;letter-spacing:-0.03em">${m.value}</div>
+          ${m.trend ? `<div class="trend-pill ${trendClass(m.dir)}" style="margin-top:4px;font-size:10.5px">${trendIcon(m.dir)} ${m.trend}</div>` : ''}
+        </div>`).join('')}
+      </div>
+      ${(d.ytVideos||[]).slice(0,4).map((r,i)=>{
+        const title = Array.isArray(r)?r[0]:(r.title||'');
+        const views = Array.isArray(r)?r[1]:(r.views||'');
+        const dur   = Array.isArray(r)?r[2]:(r.duration||'');
+        return `<div class="activity-item">
+          <div class="activity-icon ci-gray" style="font-size:12px;font-weight:700;background:var(--gray5);color:var(--gray2)">${i+1}</div>
+          <div class="activity-info"><div class="activity-name" style="font-size:12.5px">${title}</div><div class="activity-meta">${views} · ${dur}</div></div>
+        </div>`;
+      }).join('')}` : '<div class="not-configured">Not configured</div>'}
+  </div>`;
+
+  // Blog articles card
+  const blogs = d.topBlogs || [];
+  if (blogs.length) {
+    html += `
+    <div class="card col-6">
+      <div class="card-hd">
+        <div><div class="card-label">Top Blog Articles</div><div class="card-sub">By page views</div></div>
+        <div class="card-icon-wrap ci-orange">✎</div>
+      </div>
+      ${blogs.map((b, i) => `
+        <div class="activity-item">
+          <div style="width:28px;height:28px;border-radius:8px;background:var(--gray5);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--gray2);flex-shrink:0">${i+1}</div>
+          <div class="activity-info">
+            <div class="activity-name" style="font-size:12.5px">${b.title || b.path}</div>
+            <div class="activity-meta">${b.views} views · ${b.avg_duration} avg read</div>
+          </div>
+        </div>`).join('')}
+    </div>`;
+  }
+
+  // Email card with top campaigns
+  const emailM = !hasError(d.email) ? normMetrics(d.email) : [];
+  const topOpens  = d.topEmailsByOpens || [];
+  const topClicks = d.topEmailsByClicks || [];
+
+  html += `
+  <div class="card col-6">
+    <div class="card-hd">
+      <div><div class="card-label">Email</div><div class="card-sub">Constant Contact</div></div>
+      <div class="card-icon-wrap ci-green">✉</div>
+    </div>
+    ${emailM.length ? `
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:16px">
+      ${emailM.slice(0,3).map(m=>`<div>
+        <div style="font-size:11px;color:var(--gray2)">${m.label}</div>
+        <div style="font-size:20px;font-weight:800;letter-spacing:-0.03em">${m.value}</div>
+      </div>`).join('')}
+    </div>` : '<div class="not-configured">Not configured</div>'}
+    ${topOpens.length ? `
+    <div style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gray2);margin-bottom:8px;margin-top:8px">Top 5 by Open Rate</div>
+    ${topOpens.map((e,i) => `
+      <div class="activity-item">
+        <div style="width:24px;height:24px;border-radius:6px;background:var(--green-bg);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--green);flex-shrink:0">${i+1}</div>
+        <div class="activity-info">
+          <div class="activity-name" style="font-size:12px">${e.name}</div>
+          <div class="activity-meta">${e.sends} sends</div>
+        </div>
+        <div style="font-size:14px;font-weight:700;color:var(--green)">${e.open_rate}</div>
+      </div>`).join('')}` : ''}
+    ${topClicks.length ? `
+    <div style="font-size:11px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--gray2);margin-bottom:8px;margin-top:16px">Top 5 by Click Rate</div>
+    ${topClicks.map((e,i) => `
+      <div class="activity-item">
+        <div style="width:24px;height:24px;border-radius:6px;background:rgba(52,152,219,.1);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:#3498db;flex-shrink:0">${i+1}</div>
+        <div class="activity-info">
+          <div class="activity-name" style="font-size:12px">${e.name}</div>
+          <div class="activity-meta">${e.sends} sends</div>
+        </div>
+        <div style="font-size:14px;font-weight:700;color:#3498db">${e.click_rate}</div>
+      </div>`).join('')}` : ''}
+  </div>`;
+
+  // Instagram
+  const igM = !hasError(d.ig) ? normMetrics(d.ig) : [];
+  html += statCard({
+    colClass:'col-4', label:'Instagram', sub:'Organic + Paid',
+    icon:'📷', iconClass:'ci-purple',
+    rows: igM.map(m=>({ label:m.label, value:m.value })),
+  });
+
+  // Google Ads
+  const gadsM = !hasError(d.gads) ? normMetrics(d.gads) : [];
+  html += statCard({
+    colClass:'col-4', label:'Google Ads', sub:'Search + Display',
+    icon:'G', iconClass:'ci-orange',
+    rows: gadsM.map(m=>({ label:m.label, value:m.value })),
+  });
+
+  // Meta
+  const metaM = !hasError(d.meta) ? normMetrics(d.meta) : [];
+  html += statCard({
+    colClass:'col-4', label:'Meta Ads', sub:'Facebook + Instagram',
+    icon:'f', iconClass:'ci-blue',
+    rows: metaM.map(m=>({ label:m.label, value:m.value })),
+  });
+
+  // Top Landing Pages
+  const landingPages = d.landingPages || [];
+  if (landingPages.length) {
+    html += `
+    <div class="card col-6">
+      <div class="card-hd">
+        <div><div class="card-label">Top Landing Pages</div><div class="card-sub">By sessions</div></div>
+        <div class="card-icon-wrap ci-blue">📄</div>
+      </div>
+      <table class="form-table">
+        <thead><tr>
+          <th>Page</th><th>Sessions</th><th>Conv</th><th>Conv Rate</th><th>Bounce</th>
+        </tr></thead>
+        <tbody>
+          ${landingPages.slice(0,10).map(p => `<tr>
+            <td style="font-weight:600;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${p.page||p.path||''}</td>
+            <td>${p.sessions||'—'}</td>
+            <td>${p.conversions||'—'}</td>
+            <td>${p.conv_rate||'—'}</td>
+            <td style="text-align:right">${p.bounce||'—'}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`;
+  }
+
+  // Top Search Terms
+  const searchTerms = d.searchTerms || [];
+  if (searchTerms.length) {
+    html += `
+    <div class="card col-6">
+      <div class="card-hd">
+        <div><div class="card-label">Top Search Terms</div><div class="card-sub">Google Ads</div></div>
+        <div class="card-icon-wrap ci-orange">🔍</div>
+      </div>
+      <table class="form-table">
+        <thead><tr>
+          <th>Search Term</th><th>Clicks</th><th>Conv</th><th>Cost</th>
+        </tr></thead>
+        <tbody>
+          ${searchTerms.slice(0,10).map(t => `<tr>
+            <td style="font-weight:600;max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${t.term||''}</td>
+            <td>${t.clicks||'—'}</td>
+            <td>${t.conversions||t.conv||'—'}</td>
+            <td style="text-align:right">${t.cost||'—'}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`;
+  }
+
+  // Top Locations
+  const geoPerformance = d.geoPerformance || [];
+  if (geoPerformance.length) {
+    html += `
+    <div class="card col-12">
+      <div class="card-hd">
+        <div><div class="card-label">Top Locations</div><div class="card-sub">Google Ads — Geographic performance</div></div>
+        <div class="card-icon-wrap ci-green">📍</div>
+      </div>
+      <table class="form-table">
+        <thead><tr>
+          <th>Location</th><th>Clicks</th><th>Conv</th><th>Cost</th><th>CPC</th>
+        </tr></thead>
+        <tbody>
+          ${geoPerformance.slice(0,10).map(g => `<tr>
+            <td style="font-weight:600">${g.location||g.city||g.region||''}</td>
+            <td>${g.clicks||'—'}</td>
+            <td>${g.conversions||g.conv||'—'}</td>
+            <td>${g.cost||'—'}</td>
+            <td style="text-align:right">${g.cpc||'—'}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`;
+  }
+
+  html += '</div>';
+  return html;
+}
+
+// ══════════════════════════════════
+// CAMPAIGNS TAB
+// ══════════════════════════════════
+function renderCampaigns(brand) {
+  const container = document.getElementById('tab-campaigns');
+  if (brand === 'both') {
+    // Campaigns tab is RC-specific; show RC data
+    container.innerHTML = buildCampaignsGrid(DATA['rc'] || {}, 'rc');
+  } else {
+    const d = DATA[brand];
+    if (!d) { container.innerHTML = '<div class="not-configured" style="min-height:200px">No data for this brand</div>'; return; }
+    container.innerHTML = buildCampaignsGrid(d, brand);
+  }
+}
+
+function buildCampaignsGrid(d, brand) {
+  const color  = getBrandColor(brand);
+  const camp   = d.campaigns;
+
+  if (!camp || camp._error) {
+    return `<div class="card col-12" style="margin:24px">
+      <div class="card-label">Campaign Tracker</div>
+      <div class="not-configured" style="padding:40px 0">
+        ${camp && camp._error
+          ? `Campaign tracker not connected — ${camp._error}<br><br>
+             <span style="font-size:12px;color:var(--gray2)">Add <code>CAMPAIGN_TRACKER_PATH_RC</code> to your .env pointing to the Excel file, then re-run pull_all.py</span>`
+          : 'No campaign data available'}
+      </div>
+    </div>`;
+  }
+
+  const { totals, rows, by_service, by_channel, by_geo, last_updated } = camp;
+
+  // ── Funnel helper (leads → appts → proposals → jobs)
+  function funnelBar(r) {
+    const steps = [
+      { label:'Leads',     val: r.leads     || 0, color: color },
+      { label:'Appts',     val: r.appts     || 0, color: '#3b82f6' },
+      { label:'Proposals', val: r.proposals || 0, color: '#8b5cf6' },
+      { label:'Jobs',      val: r.jobs      || 0, color: '#16a34a' },
+    ];
+    return steps.map((s, i) => `
+      ${i > 0 ? `<span class="camp-funnel-arrow">→</span>` : ''}
+      <div class="camp-funnel-step">
+        <span class="camp-funnel-num">${s.val}</span>
+        <span style="color:var(--gray2);font-size:10px">${s.label}</span>
+      </div>`).join('');
+  }
+
+  // ── Row color for service type
+  const svcColor = { Roofing: '#e07252', Siding: '#3b82f6', Windows: '#8b5cf6' };
+
+  // ── KPI band
+  let html = `<div style="padding:0 0 8px">`;
+  html += `<div class="kpi-band">
+    <div class="kpi-band-item">
+      <span class="kpi-band-label">Ad Spend</span>
+      <span class="kpi-band-val">${totals.spend}</span>
+    </div>
+    <div class="kpi-band-item">
+      <span class="kpi-band-label">Impressions</span>
+      <span class="kpi-band-val">${totals.impressions}</span>
+    </div>
+    <div class="kpi-band-item">
+      <span class="kpi-band-label">Leads</span>
+      <span class="kpi-band-val">${totals.leads}</span>
+    </div>
+    <div class="kpi-band-item">
+      <span class="kpi-band-label">Appts Set</span>
+      <span class="kpi-band-val">${totals.appts}</span>
+    </div>
+    <div class="kpi-band-item">
+      <span class="kpi-band-label">Proposals</span>
+      <span class="kpi-band-val">${totals.proposals}</span>
+    </div>
+    <div class="kpi-band-item">
+      <span class="kpi-band-label">Jobs Closed</span>
+      <span class="kpi-band-val" style="color:#16a34a">${totals.jobs}</span>
+    </div>
+    <div class="kpi-band-item">
+      <span class="kpi-band-label">Revenue</span>
+      <span class="kpi-band-val" style="color:#16a34a">${totals.revenue}</span>
+    </div>
+    <div style="flex:1"></div>
+    <div class="kpi-band-item" style="text-align:right">
+      <span class="kpi-band-label">CPL</span>
+      <span class="kpi-band-val">${totals.cpl}</span>
+    </div>
+    <div class="kpi-band-item" style="text-align:right">
+      <span class="kpi-band-label">Close Rate</span>
+      <span class="kpi-band-val">${totals.close_rate}</span>
+    </div>
+    <div class="kpi-band-item" style="text-align:right">
+      <span class="kpi-band-label">ROAS</span>
+      <span class="kpi-band-val">${totals.roas}</span>
+    </div>
+  </div>`;
+
+  // ── Campaign rows table
+  html += `
+  <div class="card col-12">
+    <div class="card-hd">
+      <div>
+        <div class="card-label">All Campaigns</div>
+        <div class="card-sub">One row per campaign × geo — manually enter Appts, Proposals, Jobs &amp; Revenue</div>
+      </div>
+      ${last_updated ? `<div style="font-size:11px;color:var(--gray2)">Updated ${last_updated}</div>` : ''}
+    </div>
+    <div style="overflow-x:auto;margin-top:4px">
+    <table class="camp-table">
+      <thead><tr>
+        <th style="text-align:left;min-width:160px">Campaign</th>
+        <th style="text-align:left">Service</th>
+        <th style="text-align:left">Geo</th>
+        <th style="text-align:left">Channel</th>
+        <th>Spend</th>
+        <th>Impr.</th>
+        <th>Leads</th>
+        <th>Appts</th>
+        <th>Proposals</th>
+        <th>Jobs</th>
+        <th>Revenue</th>
+        <th>CPL</th>
+        <th>Close %</th>
+        <th>ROAS</th>
+      </tr></thead>
+      <tbody>
+        ${rows.map(r => {
+          const sc = svcColor[r.service] || color;
+          const isBlank = r.appts === 0 && r.jobs === 0 && r.revenue === 0;
+          return `<tr style="${isBlank ? 'opacity:0.7' : ''}">
+            <td style="text-align:left;max-width:180px;overflow:hidden;text-overflow:ellipsis" title="${r.name}">${r.name}</td>
+            <td style="text-align:left"><span class="camp-badge" style="background:${sc}20;color:${sc}">${r.service}</span></td>
+            <td style="text-align:left;color:var(--gray1)">${r.geo}</td>
+            <td style="text-align:left;color:var(--gray1)">${r.channel}</td>
+            <td>$${r.spend.toLocaleString(undefined,{maximumFractionDigits:0})}</td>
+            <td>${r.impressions.toLocaleString()}</td>
+            <td><strong>${r.leads}</strong></td>
+            <td style="${r.appts > 0 ? 'color:#3b82f6;font-weight:600' : 'color:var(--gray3)'}">${r.appts > 0 ? r.appts : '—'}</td>
+            <td style="${r.proposals > 0 ? 'color:#8b5cf6;font-weight:600' : 'color:var(--gray3)'}">${r.proposals > 0 ? r.proposals : '—'}</td>
+            <td style="${r.jobs > 0 ? 'color:#16a34a;font-weight:600' : 'color:var(--gray3)'}">${r.jobs > 0 ? r.jobs : '—'}</td>
+            <td style="${r.revenue > 0 ? 'color:#16a34a;font-weight:600' : 'color:var(--gray3)'}">${r.revenue > 0 ? '$'+r.revenue.toLocaleString(undefined,{maximumFractionDigits:0}) : '—'}</td>
+            <td>${r.cpl !== null ? '$'+r.cpl.toFixed(2) : '—'}</td>
+            <td>${r.close_rate !== null ? r.close_rate+'%' : '—'}</td>
+            <td style="${r.roas !== null && r.roas > 0 ? 'color:#16a34a;font-weight:600' : ''}">${r.roas !== null ? r.roas+'x' : '—'}</td>
+          </tr>`;
+        }).join('')}
+        <tr class="totals-row">
+          <td colspan="4" style="text-align:left">TOTALS / AVERAGES</td>
+          <td>${totals.spend}</td>
+          <td>${totals.impressions}</td>
+          <td>${totals.leads}</td>
+          <td>${totals.appts}</td>
+          <td>${totals.proposals}</td>
+          <td>${totals.jobs}</td>
+          <td>${totals.revenue}</td>
+          <td>${totals.cpl}</td>
+          <td>${totals.close_rate}</td>
+          <td>${totals.roas}</td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </div>`;
+
+  // ── Breakdown cards: by service / channel / geo
+  function breakdownCard(title, icon, data) {
+    if (!data || !data.length) return '';
+    return `
+    <div class="card">
+      <div class="card-hd">
+        <div class="card-label">${icon} ${title}</div>
+      </div>
+      <table class="form-table" style="margin-top:8px">
+        <thead><tr>
+          <th style="text-align:left">${title}</th>
+          <th>Spend</th>
+          <th>Leads</th>
+          <th>Jobs</th>
+          <th>CPL</th>
+          <th>ROAS</th>
+        </tr></thead>
+        <tbody>
+          ${data.map(row => `
+          <tr>
+            <td style="text-align:left;font-weight:600">${row.name}</td>
+            <td>${row.spend}</td>
+            <td>${row.leads}</td>
+            <td style="${row.jobs > 0 ? 'color:#16a34a;font-weight:600':''}">${row.jobs || '—'}</td>
+            <td>${row.cpl}</td>
+            <td style="${row.roas && row.roas !== '—' ? 'color:#16a34a':''}">${row.roas}</td>
+          </tr>`).join('')}
+        </tbody>
+      </table>
+    </div>`;
+  }
+
+  html += `<div class="breakdown-grid">
+    ${breakdownCard('By Service Type', '🏠', by_service)}
+    ${breakdownCard('By Channel', '📡', by_channel)}
+    ${breakdownCard('By Geography', '📍', by_geo)}
+  </div>`;
+
+  // ── Campaign Ranker (top performers)
+  const ranker = camp.ranker;
+  if (ranker) {
+    function rankerCard(title, icon, data, metricLabel, metricKey) {
+      if (!data || !data.length) return '';
+      return `
+      <div class="card">
+        <div class="card-hd">
+          <div class="card-label">${icon} ${title}</div>
+        </div>
+        <table class="form-table" style="margin-top:8px">
+          <thead><tr>
+            <th style="width:30px">#</th>
+            <th style="text-align:left">Campaign</th>
+            <th style="text-align:left">Service</th>
+            <th style="text-align:left">Geo</th>
+            <th>Spend</th>
+            <th>Leads</th>
+            <th style="font-weight:700">${metricLabel}</th>
+          </tr></thead>
+          <tbody>
+            ${data.map(r => `
+            <tr>
+              <td style="color:var(--gray2)">${r.rank}</td>
+              <td style="text-align:left;max-width:160px;overflow:hidden;text-overflow:ellipsis" title="${r.name}">${r.name}</td>
+              <td style="text-align:left"><span class="camp-badge" style="background:${(svcColor[r.service]||color)}20;color:${svcColor[r.service]||color}">${r.service}</span></td>
+              <td style="text-align:left;color:var(--gray1)">${r.geo}</td>
+              <td>$${r.spend.toLocaleString(undefined,{maximumFractionDigits:0})}</td>
+              <td>${r.leads}</td>
+              <td style="font-weight:700;color:${title.includes('CPL') ? (parseFloat(r.metric) < 50 ? '#16a34a' : color) : '#16a34a'}">${r.metric}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>`;
+    }
+
+    html += `<div class="breakdown-grid">
+      ${rankerCard('Top by ROAS', '🏆', ranker.by_roas, 'ROAS', 'metric')}
+      ${rankerCard('Top by CPL (Lowest)', '💰', ranker.by_cpl, 'CPL', 'metric')}
+      ${rankerCard('Top by Profit', '📈', ranker.by_profit, 'Profit', 'metric')}
+    </div>`;
+  }
+
+  // ── Assumptions & Benchmarks
+  const assumptions = camp.assumptions;
+  if (assumptions) {
+    html += `<div class="breakdown-grid">`;
+
+    // Gross Margins card
+    if (assumptions.margins && Object.keys(assumptions.margins).length) {
+      html += `
+      <div class="card">
+        <div class="card-hd">
+          <div class="card-label">📊 Gross Margins by Service</div>
+        </div>
+        <div style="display:flex;gap:24px;margin-top:16px;flex-wrap:wrap">
+          ${Object.entries(assumptions.margins).map(([svc, pct]) => `
+          <div style="text-align:center;min-width:100px">
+            <div style="font-size:28px;font-weight:800;color:${svcColor[svc]||color}">${pct}%</div>
+            <div style="font-size:12px;color:var(--gray2);margin-top:2px">${svc}</div>
+          </div>`).join('')}
+        </div>
+      </div>`;
+    }
+
+    // Benchmark Targets card
+    if (assumptions.benchmarks && Object.keys(assumptions.benchmarks).length) {
+      html += `
+      <div class="card">
+        <div class="card-hd">
+          <div class="card-label">🎯 Benchmark Targets</div>
+        </div>
+        <table class="form-table" style="margin-top:8px">
+          <thead><tr>
+            <th style="text-align:left">Metric</th>
+            <th>Target</th>
+          </tr></thead>
+          <tbody>
+            ${Object.entries(assumptions.benchmarks).map(([metric, target]) => `
+            <tr>
+              <td style="text-align:left">${metric}</td>
+              <td style="font-weight:600">${target}</td>
+            </tr>`).join('')}
+          </tbody>
+        </table>
+      </div>`;
+    }
+
+    html += `</div>`;
+  }
+
+  html += `</div>`;
+  return html;
+}
+
+// ══════════════════════════════════
+// SALES TAB
+// ══════════════════════════════════
+function renderSales(brand) {
+  const container = document.getElementById('tab-sales');
+  if (brand === 'both') {
+    container.innerHTML = ['rc','rnr','wl'].map(b => {
+      const d = DATA[b]; if (!d) return '';
+      return `<div style="margin-bottom:32px">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:16px">
+          <span style="width:10px;height:10px;border-radius:50%;background:${getBrandColor(b)}"></span>
+          <span style="font-size:15px;font-weight:700">${BRAND_NAMES[b]}</span>
+        </div>${buildSalesGrid(d,b)}</div>`;
+    }).join('');
+  } else {
+    const d = DATA[brand]; if (!d) { container.innerHTML = ''; return; }
+    container.innerHTML = buildSalesGrid(d, brand);
+  }
+  flushSparklines();
+}
+
+function buildSalesGrid(d, brand) {
+  const color = getBrandColor(brand);
+  const jt = d.jobtread;
+  const salesPipe = (!hasError(jt) && jt) ? (jt.sales_pipeline || jt.pipeline || []) : [];
+  const prodPipe  = (!hasError(jt) && jt) ? (jt.production_pipeline || []) : [];
+  const jtM       = (!hasError(jt) && jt) ? normMetrics(jt.metrics || {}) : [];
+
+  const formsRows = d.formsRows || [];
+  const fkpi = d.formsKpi || [];
+  const fM   = fkpi.length ? fkpi : normMetrics(d.forms);
+
+  let html = '<div class="dash-grid">';
+
+  // Sales Pipeline
+  const activeSales = salesPipe.filter(p => p.count > 0);
+  const maxSales = Math.max(...activeSales.map(p => p.count), 1);
+  if (activeSales.length) {
+    html += `
+    <div class="card col-8">
+      <div class="card-hd">
+        <div><div class="card-label">Sales Pipeline</div><div class="card-sub">Lead Status — JobTread</div></div>
+      </div>
+      ${jtM.length ? `
+      <div style="display:flex;gap:24px;margin-bottom:20px;flex-wrap:wrap">
+        ${jtM.map(m=>`<div>
+          <div style="font-size:11px;color:var(--gray2)">${m.label}</div>
+          <div style="font-size:26px;font-weight:800;letter-spacing:-0.04em">${m.value}</div>
+        </div>`).join('')}
+      </div>` : ''}
+      ${activeSales.map(p=>`
+        <div class="pipe-row">
+          <span class="pipe-label">${p.name}</span>
+          <div class="pipe-track"><div class="pipe-fill" style="width:${Math.round(p.count/maxSales*100)}%;background:${p.color}"></div></div>
+          <span class="pipe-count">${p.count}</span>
+        </div>`).join('')}
+    </div>`;
+  } else if (!hasError(jt)) {
+    html += `<div class="card col-8"><div class="card-label">Sales Pipeline</div><div class="not-configured">No active leads in pipeline</div></div>`;
+  } else {
+    html += `<div class="card col-8"><div class="card-label">Sales Pipeline</div><div class="not-configured">Not configured</div></div>`;
+  }
+
+  // Production Pipeline
+  const activeProd = prodPipe.filter(p => p.count > 0);
+  const maxProd = Math.max(...activeProd.map(p => p.count), 1);
+  if (activeProd.length) {
+    html += `
+    <div class="card col-12">
+      <div class="card-hd">
+        <div><div class="card-label">Production Pipeline</div><div class="card-sub">Production Status — JobTread</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:0 40px">
+      ${activeProd.map(p=>`
+        <div class="pipe-row">
+          <span class="pipe-label">${p.name}</span>
+          <div class="pipe-track"><div class="pipe-fill" style="width:${Math.round(p.count/maxProd*100)}%;background:${p.color}"></div></div>
+          <span class="pipe-count">${p.count}</span>
+        </div>`).join('')}
+      </div>
+    </div>`;
+  }
+
+  // Jobs summary
+  const jTotal  = jtM.find(m=>m.label.toLowerCase().includes('total'));
+  const jActive = jtM.find(m=>m.label.toLowerCase().includes('active'));
+  const jValue  = jtM.find(m=>m.label.toLowerCase().includes('value'));
+  html += `
+  <div class="card col-4">
+    <div class="card-hd">
+      <div><div class="card-label">Jobs Summary</div></div>
+      <div class="card-icon-wrap ci-orange">🔧</div>
+    </div>
+    ${jTotal  ? `<div class="stat-row"><span class="stat-name">Total Jobs</span><span class="stat-val">${jTotal.value}</span></div>` : ''}
+    ${jActive ? `<div class="stat-row"><span class="stat-name">Active Jobs</span><span class="stat-val">${jActive.value}</span></div>` : ''}
+    ${jValue  ? `<div class="stat-row"><span class="stat-name">Pipeline Value</span><span class="stat-val" style="color:var(--orange)">${jValue.value}</span></div>` : ''}
+    ${(!hasError(jt) && jt && jt.metrics && jt.metrics.profit_margin) ? `<div class="stat-row"><span class="stat-name">Profit Margin</span><span class="stat-val" style="color:var(--green)">${jt.metrics.profit_margin.value||jt.metrics.profit_margin}</span></div>` : ''}
+    ${(!hasError(jt) && jt && jt.metrics && jt.metrics.accounts_receivable) ? `<div class="stat-row"><span class="stat-name">Accounts Receivable</span><span class="stat-val">${jt.metrics.accounts_receivable.value||jt.metrics.accounts_receivable}</span></div>` : ''}
+    ${!jTotal && !jActive ? '<div class="not-configured">No jobs data</div>' : ''}
+  </div>`;
+
+  // Sales Activity
+  const sa = d.salesActivity;
+  if (sa) {
+    const saItems = [
+      { label:'Outbound Total', value:sa.outbound_total, trend:sa.outbound_total_trend, dir:sa.outbound_total_dir },
+      { label:'SMS Sent', value:sa.sms_sent, trend:sa.sms_sent_trend, dir:sa.sms_sent_dir },
+      { label:'Emails Sent', value:sa.emails_sent, trend:sa.emails_sent_trend, dir:sa.emails_sent_dir },
+      { label:'Calls Made', value:sa.calls_made, trend:sa.calls_made_trend, dir:sa.calls_made_dir },
+      { label:'Avg Response', value:sa.avg_response, trend:sa.avg_response_trend, dir:sa.avg_response_dir },
+    ].filter(i => i.value !== undefined && i.value !== null);
+
+    if (saItems.length) {
+      html += `
+      <div class="card col-6">
+        <div class="card-hd">
+          <div><div class="card-label">Sales Activity</div><div class="card-sub">GoHighLevel</div></div>
+          <div class="card-icon-wrap ci-purple">📞</div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px">
+          ${saItems.map(i => `<div>
+            <div style="font-size:11px;color:var(--gray2);margin-bottom:2px">${i.label}</div>
+            <div style="font-size:20px;font-weight:800;letter-spacing:-0.03em">${i.value}</div>
+            ${i.trend ? `<div class="trend-pill ${trendClass(i.dir)}" style="margin-top:4px;font-size:10.5px">${trendIcon(i.dir)} ${i.trend}</div>` : ''}
+          </div>`).join('')}
+        </div>
+      </div>`;
+    }
+  }
+
+  // Overdue Follow-ups / Tasks
+  const tasks = d.tasks;
+  if (tasks) {
+    const overdueVal = tasks.overdue !== undefined ? tasks.overdue : null;
+    const openVal = tasks.open !== undefined ? tasks.open : null;
+    const completedVal = tasks.completed !== undefined ? tasks.completed : null;
+    const compRate = tasks.completion_rate !== undefined ? tasks.completion_rate : null;
+
+    if (overdueVal !== null || openVal !== null || completedVal !== null) {
+      html += `
+      <div class="card col-6">
+        <div class="card-hd">
+          <div><div class="card-label">Follow-ups & Tasks</div><div class="card-sub">Task status</div></div>
+          <div class="card-icon-wrap ci-orange">✅</div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px">
+          ${overdueVal !== null ? `<div>
+            <div style="font-size:11px;color:var(--gray2);margin-bottom:2px">Overdue</div>
+            <div style="font-size:20px;font-weight:800;letter-spacing:-0.03em;${overdueVal > 0 ? 'color:var(--red)' : ''}">${overdueVal}</div>
+          </div>` : ''}
+          ${openVal !== null ? `<div>
+            <div style="font-size:11px;color:var(--gray2);margin-bottom:2px">Open</div>
+            <div style="font-size:20px;font-weight:800;letter-spacing:-0.03em">${openVal}</div>
+          </div>` : ''}
+          ${completedVal !== null ? `<div>
+            <div style="font-size:11px;color:var(--gray2);margin-bottom:2px">Completed</div>
+            <div style="font-size:20px;font-weight:800;letter-spacing:-0.03em;color:var(--green)">${completedVal}</div>
+          </div>` : ''}
+          ${compRate !== null ? `<div>
+            <div style="font-size:11px;color:var(--gray2);margin-bottom:2px">Completion Rate</div>
+            <div style="font-size:20px;font-weight:800;letter-spacing:-0.03em">${compRate}</div>
+          </div>` : ''}
+        </div>
+      </div>`;
+    }
+  }
+
+  // Form fills
+  html += `
+  <div class="card col-12">
+    <div class="card-hd">
+      <div><div class="card-label">Form Fills</div><div class="card-sub">All sources</div></div>
+      <div class="card-icon-wrap ci-orange">📋</div>
+    </div>
+    ${fM.length ? `
+    <div style="display:flex;gap:24px;margin-bottom:16px;flex-wrap:wrap">
+      ${fM.map(m=>`<div>
+        <div style="font-size:11px;color:var(--gray2)">${m.label}</div>
+        <div style="font-size:24px;font-weight:800;letter-spacing:-0.04em">${m.value}</div>
+        ${m.trend ? `<div class="trend-pill ${trendClass(m.dir)}" style="margin-top:4px;font-size:10.5px">${trendIcon(m.dir)} ${m.trend}</div>` : ''}
+      </div>`).join('')}
+    </div>` : ''}
+    ${formsRows.length ? `
+    <table style="width:100%;border-collapse:collapse;font-size:13px">
+      <thead><tr>
+        <th style="text-align:left;padding:9px 0;font-size:10.5px;font-weight:700;color:var(--gray3);text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--gray5)">Form Type</th>
+        <th style="text-align:left;padding:9px 0;font-size:10.5px;font-weight:700;color:var(--gray3);text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--gray5)">Submissions</th>
+        <th style="text-align:left;padding:9px 0;font-size:10.5px;font-weight:700;color:var(--gray3);text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--gray5)">Source</th>
+        <th style="text-align:left;padding:9px 0;font-size:10.5px;font-weight:700;color:var(--gray3);text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--gray5)">Conv. Rate</th>
+        <th style="text-align:right;padding:9px 0;font-size:10.5px;font-weight:700;color:var(--gray3);text-transform:uppercase;letter-spacing:.06em;border-bottom:1px solid var(--gray5)">Trend</th>
+      </tr></thead>
+      <tbody>
+        ${formsRows.map(r=>{
+          const type  = Array.isArray(r)?r[0]:(r.type||r.form||'');
+          const subs  = Array.isArray(r)?r[1]:(r.submissions||r.count||'0');
+          const src   = Array.isArray(r)?r[2]:(r.source||'');
+          const rate  = Array.isArray(r)?r[3]:(r.rate||'');
+          const trend = Array.isArray(r)?r[4]:(r.trend||'');
+          const tc    = trend.startsWith('+')?'var(--green)':trend.startsWith('-')?'var(--red)':'var(--gray2)';
+          return `<tr>
+            <td style="padding:10px 0;border-bottom:1px solid var(--gray5)">${type}</td>
+            <td style="padding:10px 0;border-bottom:1px solid var(--gray5);font-weight:700">${subs}</td>
+            <td style="padding:10px 0;border-bottom:1px solid var(--gray5)"><span style="background:var(--orange-light);color:var(--orange);padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600">${src}</span></td>
+            <td style="padding:10px 0;border-bottom:1px solid var(--gray5)">${rate}</td>
+            <td style="padding:10px 0;border-bottom:1px solid var(--gray5);text-align:right;font-weight:600;color:${tc}">${trend}</td>
+          </tr>`;
+        }).join('')}
+      </tbody>
+    </table>` : (!fM.length ? '<div class="not-configured">No form data</div>' : '')}
+  </div>`;
+
+  html += '</div>';
+  return html;
+}
+
+// ══════════════════════════════════
+// YOUTUBE MODAL
+// ══════════════════════════════════
+function openYouTubeModal(brand) {
+  const d = DATA[brand];
+  if (!d || hasError(d.yt)) return;
+  const ytM    = normMetrics(d.yt);
+  const videos = d.ytVideos || [];
+
+  let html = `<div style="margin-bottom:20px">
+    <div style="font-size:20px;font-weight:800;letter-spacing:-0.03em">YouTube Performance</div>
+    <div style="font-size:13px;color:var(--gray2);margin-top:3px">${BRAND_NAMES[brand]}</div>
+  </div>
+  <div style="display:flex;gap:24px;margin-bottom:24px;flex-wrap:wrap">
+    ${ytM.map(m=>`<div>
+      <div style="font-size:11px;color:var(--gray2)">${m.label}</div>
+      <div style="font-size:26px;font-weight:800;letter-spacing:-0.03em">${m.value}</div>
+      ${m.trend ? `<div class="trend-pill ${trendClass(m.dir)}" style="margin-top:4px;font-size:10.5px">${trendIcon(m.dir)} ${m.trend}</div>` : ''}
+    </div>`).join('')}
+  </div>`;
+
+  if (videos.length) {
+    html += '<div style="font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--gray2);margin-bottom:10px">Videos</div>';
+    videos.forEach((r,i) => {
+      const title = Array.isArray(r)?r[0]:(r.title||'');
+      const views = Array.isArray(r)?r[1]:(r.views||'');
+      const dur   = Array.isArray(r)?r[2]:(r.duration||'');
+      html += `<div class="activity-item">
+        <div style="width:28px;height:28px;border-radius:8px;background:var(--gray5);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:700;color:var(--gray2);flex-shrink:0">${i+1}</div>
+        <div class="activity-info"><div class="activity-name">${title}</div><div class="activity-meta">${views} · ${dur}</div></div>
+      </div>`;
+    });
+  }
+
+  document.getElementById('modal-body').innerHTML = html;
+  document.getElementById('modal-overlay').classList.add('open');
+}
+
+function closeModal(e) { if (e.target === document.getElementById('modal-overlay')) document.getElementById('modal-overlay').classList.remove('open'); }
+function closeModalDirect() { document.getElementById('modal-overlay').classList.remove('open'); }
+
+// ══════════════════════════════════
+// ASK AI
+// ══════════════════════════════════
+let AI_HISTORY = [];
+const AI_SUGGESTIONS = [
+  "How long are leads sitting in each stage for RC?",
+  "Which RC projects are stalled the longest?",
+  "Look up a customer by name (e.g. Tassone)",
+  "Did 1119 Robin Rd come in on budget?"
+];
+
+function renderAskAI() {
+  const panel = document.getElementById('tab-ai');
+  if (panel.dataset.rendered === '1') { updateAIRangeLabel(); scrollAIToBottom(); return; }
+  panel.dataset.rendered = '1';
+
+  panel.innerHTML = `
+    <div class="ai-wrap">
+      <div class="ai-messages" id="ai-messages"></div>
+      <div class="ai-input-wrap">
+        <textarea class="ai-input" id="ai-input" placeholder="Ask anything about your marketing data…" rows="1"></textarea>
+        <button class="ai-send" id="ai-send" onclick="sendAIMessage()" title="Send">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M3 10h14M11 4l6 6-6 6"/>
+          </svg>
+        </button>
+      </div>
+      <div class="ai-meta">
+        <span>Powered by Claude · Snapshot for all brands + live JobTread for Remodeling Concepts</span>
+        <span id="ai-range-label"></span>
+      </div>
+    </div>`;
+
+  renderAIMessages();
+
+  const ta = document.getElementById('ai-input');
+  ta.addEventListener('input', () => {
+    ta.style.height = 'auto';
+    ta.style.height = Math.min(ta.scrollHeight, 160) + 'px';
+  });
+  ta.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      sendAIMessage();
+    }
+  });
+  updateAIRangeLabel();
+}
+
+function updateAIRangeLabel() {
+  const el = document.getElementById('ai-range-label');
+  if (el) el.textContent = 'Range: ' + ((DATA && DATA.range_key) || (document.querySelector('.r-btn.active')?.textContent?.trim()) || '30d');
+}
+
+function renderAIMessages() {
+  const box = document.getElementById('ai-messages');
+  if (!box) return;
+  if (AI_HISTORY.length === 0) {
+    box.innerHTML = `
+      <div class="ai-empty">
+        <h3>Ask anything about your marketing data</h3>
+        <p>Snapshot metrics for all brands + live JobTread access for Remodeling Concepts (customers, pipeline stages, time-in-stage, job financials).</p>
+        <div class="ai-chips">
+          ${AI_SUGGESTIONS.map(q => `<button class="ai-chip" onclick="seedAI(this)">${q}</button>`).join('')}
+        </div>
+      </div>`;
+    return;
+  }
+  box.innerHTML = AI_HISTORY.map(m => {
+    const cls = m.role === 'user' ? 'user' : (m.error ? 'error' : 'assistant') + (m.loading ? ' loading' : '');
+    const html = m.role === 'user' || m.error || m.loading ? escapeHtml(m.content) : renderMarkdown(m.content);
+    return `<div class="ai-msg ${cls}">${html}</div>`;
+  }).join('');
+  scrollAIToBottom();
+}
+
+function escapeHtml(s) {
+  return String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+}
+
+function renderInline(s) {
+  // bold, code, inline escape. Apply escape first, then replace markers.
+  let out = escapeHtml(s);
+  out = out.replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>');
+  out = out.replace(/`([^`]+)`/g, '<code>$1</code>');
+  return out;
+}
+
+function renderMarkdown(text) {
+  const lines = String(text).split(/\r?\n/);
+  const out = [];
+  let i = 0;
+  const numLike = v => /^[\-$]?\(?[\d,]+(\.\d+)?%?\)?$/.test(v.trim()) || /^\d+\s*(days?|hrs?|mins?)$/i.test(v.trim());
+
+  while (i < lines.length) {
+    const line = lines[i];
+
+    // Table: header row + separator row
+    if (/^\s*\|.*\|\s*$/.test(line) && i + 1 < lines.length && /^\s*\|[\s:\-|]+\|\s*$/.test(lines[i + 1])) {
+      const parseRow = l => l.trim().replace(/^\||\|$/g, '').split('|').map(c => c.trim());
+      const headers = parseRow(line);
+      i += 2; // skip header + separator
+      const rows = [];
+      while (i < lines.length && /^\s*\|.*\|\s*$/.test(lines[i])) {
+        rows.push(parseRow(lines[i]));
+        i++;
+      }
+      const numCols = headers.map((_, ci) => rows.every(r => !r[ci] || numLike(r[ci])));
+      const th = headers.map((h, ci) => `<th${numCols[ci] ? ' class="num"' : ''}>${renderInline(h)}</th>`).join('');
+      const body = rows.map(r => `<tr>${r.map((c, ci) => `<td${numCols[ci] ? ' class="num"' : ''}>${renderInline(c)}</td>`).join('')}</tr>`).join('');
+      out.push(`<table><thead><tr>${th}</tr></thead><tbody>${body}</tbody></table>`);
+      continue;
+    }
+
+    // Headings
+    const h = line.match(/^(#{2,4})\s+(.+)$/);
+    if (h) {
+      const tag = h[1].length >= 4 ? 'h4' : 'h3';
+      out.push(`<${tag}>${renderInline(h[2])}</${tag}>`);
+      i++;
+      continue;
+    }
+
+    // Lists
+    if (/^\s*[-*]\s+/.test(line)) {
+      const items = [];
+      while (i < lines.length && /^\s*[-*]\s+/.test(lines[i])) {
+        items.push(`<li>${renderInline(lines[i].replace(/^\s*[-*]\s+/, ''))}</li>`);
+        i++;
+      }
+      out.push(`<ul>${items.join('')}</ul>`);
+      continue;
+    }
+
+    // Blank line
+    if (!line.trim()) { i++; continue; }
+
+    // Paragraph (join consecutive non-empty, non-special lines)
+    const para = [line];
+    i++;
+    while (i < lines.length && lines[i].trim() && !/^(#{2,4}\s|[-*]\s|\|)/.test(lines[i])) {
+      para.push(lines[i]);
+      i++;
+    }
+    out.push(`<p>${para.map(renderInline).join('<br>')}</p>`);
+  }
+  return out.join('');
+}
+
+function scrollAIToBottom() {
+  const box = document.getElementById('ai-messages');
+  if (box) box.scrollTop = box.scrollHeight;
+}
+
+function seedAI(el) {
+  const ta = document.getElementById('ai-input');
+  ta.value = el.textContent;
+  ta.focus();
+}
+
+async function sendAIMessage() {
+  const ta = document.getElementById('ai-input');
+  const btn = document.getElementById('ai-send');
+  const text = ta.value.trim();
+  if (!text) return;
+
+  AI_HISTORY.push({ role: 'user', content: text });
+  AI_HISTORY.push({ role: 'assistant', content: 'Thinking…', loading: true });
+  renderAIMessages();
+
+  ta.value = ''; ta.style.height = 'auto';
+  btn.disabled = true;
+
+  const payload = {
+    range: (DATA && DATA.range_key) || (document.querySelector('.r-btn.active')?.textContent?.trim()) || '30d',
+    brand: currentBrand || 'rc',
+    messages: AI_HISTORY
+      .filter(m => !m.loading && !m.error)
+      .map(m => ({ role: m.role, content: m.content }))
+  };
+
+  try {
+    const resp = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    });
+    const json = await resp.json();
+    AI_HISTORY.pop(); // remove loading
+    if (!resp.ok) {
+      AI_HISTORY.push({ role: 'assistant', content: json.error || 'Request failed', error: true });
+    } else {
+      AI_HISTORY.push({ role: 'assistant', content: json.reply || '(empty reply)' });
+    }
+  } catch (e) {
+    AI_HISTORY.pop();
+    AI_HISTORY.push({ role: 'assistant', content: 'Network error: ' + e.message, error: true });
+  } finally {
+    btn.disabled = false;
+    renderAIMessages();
+  }
+}
+
+// ══════════════════════════════════
+// TAB SWITCHING
+// ══════════════════════════════════
+const TAB_TITLES = {
+  executive: 'Executive Summary',
+  overview:  'Marketing Overview',
+  marketing: 'Marketing Channels',
+  campaigns: 'Campaign Tracker',
+  sales:     'Sales & Pipeline',
+  ai:        'Ask AI'
+};
+
+function switchTab(tab, el) {
+  currentTab = tab;
+  document.querySelectorAll('.nav-item[data-tab]').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.add('hidden'));
+  document.getElementById('tab-' + tab).classList.remove('hidden');
+  document.getElementById('page-title').textContent = TAB_TITLES[tab];
+  document.getElementById('eyebrow-tab').textContent = TAB_TITLES[tab];
+  renderCurrentTab();
+}
+
+function renderCurrentTab() {
+  if (!DATA) return;
+  if (currentTab === 'executive') renderExecutive(currentBrand);
+  if (currentTab === 'overview')  renderOverview(currentBrand);
+  if (currentTab === 'marketing') renderMarketing(currentBrand);
+  if (currentTab === 'campaigns') renderCampaigns(currentBrand);
+  if (currentTab === 'sales')     renderSales(currentBrand);
+  if (currentTab === 'ai')        renderAskAI();
+}
+
+// ══════════════════════════════════
+// BRAND SWITCHING
+// ══════════════════════════════════
+function selectBrand(brand, el) {
+  if (!DATA) return;
+  const changed = currentBrand !== brand;
+  currentBrand = brand;
+  document.querySelectorAll('.nav-brand-item').forEach(o => o.classList.remove('active'));
+  el.classList.add('active');
+  const color = getBrandColor(brand);
+  document.documentElement.style.setProperty('--brand-color', color);
+  document.getElementById('page-title').textContent = brand === 'both' ? 'All Brands' : BRAND_NAMES[brand];
+  document.getElementById('eyebrow-brand').textContent = BRAND_NAMES[brand];
+  if (changed) {
+    AI_HISTORY = [];
+    const panel = document.getElementById('tab-ai');
+    if (panel) panel.dataset.rendered = '';
+  }
+  renderCurrentTab();
+}
+
+function setBrand(brand) {
+  const el = document.querySelector(`.nav-brand-item[data-brand="${brand}"]`);
+  if (el) selectBrand(brand, el);
+}
+
+// ══════════════════════════════════
+// DATE / THEME / UTILS
+// ══════════════════════════════════
+function setHeaderDate() {
+  const d = new Date();
+  document.getElementById('hdr-day').textContent   = d.getDate();
+  document.getElementById('hdr-dow').textContent   = d.toLocaleDateString('en-US',{weekday:'short'}) + ',';
+  document.getElementById('hdr-month').textContent = d.toLocaleDateString('en-US',{month:'long'});
+}
+
+async function setRange(range, el) {
+  document.querySelectorAll('.r-btn').forEach(b => b.classList.remove('active'));
+  el.classList.add('active');
+  const labels = { '7d':'Last 7 days','30d':'Last 30 days','90d':'Last 90 days' };
+  const subEl = document.getElementById('page-sub-text');
+  subEl.textContent = `Loading ${labels[range]}…`;
+  try {
+    // Fetch pre-cached data for this range (instant, no API re-pull)
+    const resp = await fetch(`/api/data?range=${range}`);
+    if (resp.ok) {
+      const json = await resp.json();
+      if (json && (json.rc || json.rnr || json.wl)) {
+        DATA = json;
+        if (json.date_range) {
+          if (json.date_range.start) document.getElementById('date-from').value = json.date_range.start;
+          if (json.date_range.end) document.getElementById('date-to').value = json.date_range.end;
+        }
+        renderCurrentTab();
+      }
+      subEl.textContent = `All channels · ${labels[range]} vs. prior period`;
+    } else {
+      subEl.textContent = `No data for ${labels[range]}`;
+    }
+  } catch(e) {
+    subEl.textContent = `Failed to load — check server`;
+    console.error('Range switch error:', e);
+  }
+}
+
+async function refreshCustomRange() {
+  const from = document.getElementById('date-from').value;
+  const to   = document.getElementById('date-to').value;
+  if (!from || !to) return;
+  document.querySelectorAll('.r-btn').forEach(b => b.classList.remove('active'));
+  const subEl = document.getElementById('page-sub-text');
+  subEl.textContent = `Pulling custom range (${from} to ${to})… this takes ~30s`;
+  try {
+    // Custom ranges DO need to pull from APIs (not pre-cached)
+    const resp = await fetch(`/api/refresh?start=${from}&end=${to}`, { method:'POST' });
+    if (resp.ok) {
+      // Load the custom range data
+      const dataResp = await fetch('/api/data?range=custom');
+      if (dataResp.ok) {
+        const json = await dataResp.json();
+        if (json && (json.rc || json.rnr || json.wl)) {
+          DATA = json;
+          renderCurrentTab();
+        }
+      }
+      subEl.textContent = `All channels · ${from} to ${to}`;
+    } else {
+      subEl.textContent = `Refresh failed`;
+    }
+  } catch(e) {
+    subEl.textContent = `Refresh failed — check server`;
+    console.error('Refresh error:', e);
+  }
+}
+
+let darkMode = false;
+function toggleTheme() {
+  darkMode = !darkMode;
+  document.body.style.background   = darkMode ? '#111113' : '';
+  document.body.style.color        = darkMode ? '#f0f0f0' : '';
+  document.querySelectorAll('.sidebar').forEach(el => el.style.background = darkMode ? '#16161a' : '');
+  document.querySelectorAll('.top-header').forEach(el => el.style.background = darkMode ? '#16161a' : '');
+  document.querySelectorAll('.card').forEach(el => el.style.background = darkMode ? '#1c1c20' : '');
+}
+
+function formatTimestamp(ts) {
+  if (!ts) return '';
+  const d = new Date(ts);
+  if (isNaN(d.getTime())) return ts;
+  return d.toLocaleString('en-US',{month:'short',day:'numeric',year:'numeric',hour:'numeric',minute:'2-digit',hour12:true});
+}
+
+// ══════════════════════════════════
+// FETCH + INIT
+// ══════════════════════════════════
+async function loadData(isRefresh) {
+  try {
+    const resp = await fetch('/api/data');
+    if (!resp.ok) { useSampleData(); return; }
+    const json = await resp.json();
+    if (!json || (!json.rc && !json.rnr && !json.wl)) { useSampleData(); return; }
+
+    DATA = json;
+
+    if (json.date_range) {
+      if (json.date_range.start) document.getElementById('date-from').value = json.date_range.start;
+      if (json.date_range.end)   document.getElementById('date-to').value   = json.date_range.end;
+    }
+
+    if (json.generated_at) {
+      document.getElementById('live-badge').style.display = 'inline-flex';
+    }
+
+    // Only auto-select brand on initial load, not on refresh
+    if (!isRefresh) {
+      const hasRC  = json.rc  && !json.rc._error;
+      const hasRNR = json.rnr && !json.rnr._error;
+      const hasWL  = json.wl  && !json.wl._error;
+      currentBrand = hasRC ? 'rc' : hasRNR ? 'rnr' : hasWL ? 'wl' : 'rc';
+
+      document.documentElement.style.setProperty('--brand-color', getBrandColor(currentBrand));
+      document.getElementById('page-title').textContent   = BRAND_NAMES[currentBrand];
+      document.getElementById('eyebrow-brand').textContent = BRAND_NAMES[currentBrand];
+
+      document.querySelectorAll('.nav-brand-item').forEach(o => {
+        o.classList.toggle('active', o.getAttribute('data-brand') === currentBrand);
+      });
+    }
+
+    renderCurrentTab();
+  } catch(err) {
+    console.warn('API unavailable, using sample data:', err.message);
+    useSampleData();
+  }
+}
+
+function useSampleData() {
+  DATA = SAMPLE;
+  currentBrand = 'rc';
+  document.documentElement.style.setProperty('--brand-color', getBrandColor('rc'));
+  document.getElementById('page-title').textContent    = BRAND_NAMES['rc'];
+  document.getElementById('eyebrow-brand').textContent = BRAND_NAMES['rc'];
+  document.getElementById('page-sub-text').textContent = 'Sample data · Last 30 days vs. prior period';
+  document.querySelectorAll('.nav-brand-item').forEach(o => {
+    o.classList.toggle('active', o.getAttribute('data-brand') === 'rc');
+  });
+  renderCurrentTab();
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  setHeaderDate();
+  loadData();
+});
+</script>
+</body>
+</html>
