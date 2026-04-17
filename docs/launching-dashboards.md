@@ -7,58 +7,45 @@ Which brands appear is controlled by the `ACTIVE_BRANDS` env var.
 
 ## Dashboard 1 — Remodeling Concepts (Online)
 
-**URL:** `http://187.77.219.112:5050`  
-**Server:** Ubuntu VPS at `187.77.219.112`  
+**URL:** `https://dashboard.remodelingconcepts.net`  
+**Direct IP (no domain needed):** `http://187.77.219.112`  
+**Server:** Hostinger VPS at `187.77.219.112`  
 **Code lives at:** `~/pulsedash/` on the server  
 **Brands:** RC only (`ACTIVE_BRANDS=rc` set in `~/pulsedash/.env`)
 
 ### How it works
 
-The server runs as a background process (`nohup`) that:
-- Serves the dashboard HTML at port 5050
-- Keeps cached data files in `~/pulsedash/.tmp/` (one per date range: `data_7d.json`, `data_30d.json`, `data_90d.json`)
-- Auto-refreshes all data every hour by calling the APIs again
-- When you switch 7d / 30d / 90d in the browser, it just swaps which cached file it reads — no API call needed
+The server runs as a **systemd service** (auto-starts on boot, restarts on crash):
+- Flask app (`server.py`) runs on port 5050
+- nginx sits in front on port 80/443, proxying to port 5050
+- Cloudflare proxies `dashboard.remodelingconcepts.net` → server IP
+- Cached data files in `~/pulsedash/.tmp/` (one per date range)
+- Auto-refreshes all data every hour
 
 ### Check if it's running
 
 ```bash
 ssh root@187.77.219.112
-pgrep -a -f "server.py"
+systemctl status pulsedash
+systemctl status nginx
 ```
 
-If you see a line like `23154 ... venv/bin/python server.py`, it's running.  
-If nothing prints, the server is down and needs to be started.
-
-### Start the server (first time or after a reboot)
-
-```bash
-ssh root@187.77.219.112
-cd ~/pulsedash
-nohup venv/bin/python server.py > server.log 2>&1 &
-```
-
-- `nohup` keeps it running after you close the SSH session
-- `> server.log 2>&1` sends all output (errors, refresh logs) to `server.log`
-- The `&` runs it in the background so you get your terminal back
+Both should show `active (running)`.
 
 ### Restart the server
 
 ```bash
 ssh root@187.77.219.112
-kill $(pgrep -f "server.py")
-sleep 2
-cd ~/pulsedash
-nohup venv/bin/python server.py > server.log 2>&1 &
+systemctl restart pulsedash
 ```
 
-You need to restart whenever you deploy code changes — Python loads the code once at startup and doesn't pick up file changes while running.
+You need to restart whenever you deploy code changes.
 
 ### View server logs (errors, refresh activity)
 
 ```bash
 ssh root@187.77.219.112
-tail -f ~/pulsedash/server.log
+journalctl -u pulsedash -f
 ```
 
 Press `Ctrl+C` to stop watching. Useful for debugging or confirming a refresh ran.
@@ -207,9 +194,11 @@ python tools/pull_all.py --brands rc --output .tmp/my-snapshot.json
 
 | Task | Command (run on server unless noted) |
 |------|--------------------------------------|
-| Is it running? | `pgrep -a -f "server.py"` |
-| View logs | `tail -f ~/pulsedash/server.log` |
-| Restart server | `kill $(pgrep -f "server.py") && sleep 2 && cd ~/pulsedash && nohup venv/bin/python server.py > server.log 2>&1 &` |
+| Is it running? | `systemctl status pulsedash` |
+| View logs | `journalctl -u pulsedash -f` |
+| Restart server | `systemctl restart pulsedash` |
 | Force data refresh | `curl -X POST http://localhost:5050/api/refresh` |
-| Deploy code | `git pull` → restart → refresh |
+| Deploy code | `git pull` → `systemctl restart pulsedash` → refresh |
 | Start RNR locally (Mac) | `ACTIVE_BRANDS=rnr python server.py --port 5052` |
+| nginx status | `systemctl status nginx` |
+| nginx reload (after config change) | `nginx -t && systemctl reload nginx` |
