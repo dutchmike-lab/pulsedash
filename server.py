@@ -71,7 +71,7 @@ def pull_range(days, range_key):
 
 def pull_all_ranges():
     """Pull data for all standard date ranges."""
-    for days, key in [(7, "7d"), (30, "30d"), (90, "90d")]:
+    for days, key in [(0, "today"), (7, "7d"), (30, "30d"), (90, "90d")]:
         try:
             pull_range(days, key)
             print(f"  Pulled {key}")

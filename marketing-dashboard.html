@@ -736,6 +736,7 @@ canvas.spark { display: block; }
 
     <div class="header-right">
       <div class="range-pills">
+        <button class="r-btn" onclick="setRange('today',this)">Today</button>
         <button class="r-btn" onclick="setRange('7d',this)">7d</button>
         <button class="r-btn active" onclick="setRange('30d',this)">30d</button>
         <button class="r-btn" onclick="setRange('90d',this)">90d</button>
@@ -2553,7 +2554,7 @@ function setHeaderDate() {
 async function setRange(range, el) {
   document.querySelectorAll('.r-btn').forEach(b => b.classList.remove('active'));
   el.classList.add('active');
-  const labels = { '7d':'Last 7 days','30d':'Last 30 days','90d':'Last 90 days' };
+  const labels = { 'today':'Today','7d':'Last 7 days','30d':'Last 30 days','90d':'Last 90 days' };
   const subEl = document.getElementById('page-sub-text');
   subEl.textContent = `Loading ${labels[range]}…`;
   try {
